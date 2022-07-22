@@ -1,0 +1,16 @@
+---
+- hosts: [isucon]
+  become: true
+  tasks:
+      # rootユーザーで /home/ubuntu に配置する
+      - name: git init
+        shell: >
+          git init;
+          git config --global --add safe.directory /home/ubuntu;
+          git remote add origin https://github.com/tayzar-tznw/isucon-11-qualify-practice.git;
+      
+      # destにはディレクトリ名を一致させる必要がある
+      - name: git clone
+        ansible.builtin.git:
+          repo: https://ymktmk:{password}@github.com/tayzar-tznw/isucon-11-qualify-practice.git
+          dest: /home/ubuntu/isucon-11-qualify-practice

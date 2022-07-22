@@ -1,0 +1,16 @@
+# とりあえず検証用として用いる
+---
+- hosts: isucon # allの場合、インベントリファイル内の全てのサーバーが対象となる。今回はホスト名
+  become: true
+  tasks:
+    - name: update
+      shell: apt-get update -y
+
+    - name: fix nginx config
+      template:
+        src: ../template/nginx.conf
+        dest: /etc/nginx/nginx.conf
+
+    # cat /var/log/nginx/access.log | alp ltsv --sort avg が使えるようになる
+    - name: delete nginx log & nginx restart
+      shell: systemctl reload nginx

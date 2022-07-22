@@ -1,0 +1,38 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-adapter
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://prometheus-community.github.io/helm-charts'
+    targetRevision: 3.0.0
+    helm:
+      values: |
+        rules:
+          default: false
+          custom:
+          - seriesQuery: 'sidekiq_processes{namespace!="",service!=""}'
+            resources:
+              overrides:
+                namespace:
+                  resource: namespace
+                service:
+                  resource: service
+            name:
+              as: sidekiq_processes
+            metricsQuery: '<<.Series>>{<<.LabelMatchers>>}'
+        prometheus:
+          url: http://prometheus-operator-kube-p-prometheus.default
+        logLevel: 2
+    chart: prometheus-adapter
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true

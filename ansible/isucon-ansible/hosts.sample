@@ -1,0 +1,7 @@
+[isucon]
+XX.XX.XX.XX
+
+[isucon:vars]
+ansible_port=22
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/Users/ymktmk/.ssh/ymktmk

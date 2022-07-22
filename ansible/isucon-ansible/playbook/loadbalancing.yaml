@@ -1,0 +1,12 @@
+# サーバー１から１台目のAppと２台目のAppにProxyする構成に変更
+---
+- hosts: isucon
+  # remote_user: ubuntu
+  become: true
+  tasks:
+    - name: enable loadbalancing
+      template: # alpを有効にするnginx.confを記述すること
+        src: ../template/nginx.conf
+        dest: /etc/nginx/nginx.conf
+    - name: nginx restart
+      shell: systemctl reload nginx

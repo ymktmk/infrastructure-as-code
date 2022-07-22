@@ -1,0 +1,38 @@
+---
+- hosts: isucon
+  # remote_user: ubuntu
+  become: true
+  tasks:
+    - name: update
+      shell: apt-get update -y
+
+    # 本番は既にデプロイ&インストールされている状態なのか？
+    ## nginx ##
+    # - name: nginx install
+    #   apt:
+    #     name: nginx
+    #     state: latest
+
+    ## alp ##
+    - name: alp install
+      shell: >
+        wget https://github.com/tkuchiki/alp/releases/download/v1.0.9/alp_linux_amd64.zip;
+        unzip alp_linux_amd64.zip;
+        install ./alp /usr/local/bin;
+    - name: fix nginx config
+      template: # alpを有効にするnginx.confを記述すること
+        src: ../template/nginx.conf
+        dest: /etc/nginx/nginx.conf
+    - name: delete nginx log & nginx restart
+      shell: rm /var/log/nginx/access.log && systemctl reload nginx
+
+    ## git ##
+    - name: git install
+      apt:
+        name: git
+        state: latest
+    
+    # - name: git clone
+    #   ansible.builtin.git:
+    #     repo: https://ymktmk:{password}@github.com/ymktmk/test.git
+    #     dest: /var/www/test

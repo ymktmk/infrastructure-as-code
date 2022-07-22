@@ -1,0 +1,22 @@
+---
+- hosts: [isucon]
+  become: true
+  tasks:
+      # /home/ubuntu
+      - name: git pull
+        ansible.builtin.git:
+          repo: https://ymktmk:{password}@github.com/tayzar-tznw/isucon-11-qualify-practice.git
+          dest: /home/ubuntu/isucon-11-qualify-practice
+          version: main
+
+      # main.goのディレクトリにて
+      - name: go build
+        shell: /home/isucon/local/go/bin/go build -o isucholar
+        args:
+          chdir: /home/ubuntu/isucon-11-qualify-practice/webapp/go
+
+      - name: copy & restart
+        shell: >
+          cp isucholar /home/isucon/webapp/go/;
+          systemctl stop isucholar.go.service;
+          systemctl restart isucholar.go.service;

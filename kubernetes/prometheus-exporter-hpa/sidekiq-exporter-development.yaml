@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: sidekiq
+  name: sidekiq-exporter
+spec:
+  selector:
+    matchLabels:
+      app: sidekiq-exporter
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sidekiq-exporter
+      name: sidekiq-exporter
+    spec:
+      containers:
+      # Sidekiq-Exporter
+      - name: sidekiq-exporter
+        image: strech/sidekiq-prometheus-exporter:latest
+        env:
+        - name: REDIS_URL
+          value: redis://localhost:6379 
+        ports:
+        - containerPort: 9292
+          name: exporter
+      # Redis
+      - name: redis
+        image: redis:5-alpine
+        ports:
+        - containerPort: 6379

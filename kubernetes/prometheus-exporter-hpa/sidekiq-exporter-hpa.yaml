@@ -1,0 +1,24 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: sidekiq-exporter-hpa
+  namespace: sidekiq
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sidekiq-exporter
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+  - type: Object
+    object:
+      describedObject:
+        apiVersion: v1
+        kind: Service
+        name: sidekiq-exporter
+      metric:
+        name: sidekiq_processes
+      target:
+        type: Value
+        value: 1

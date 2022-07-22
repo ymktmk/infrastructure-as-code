@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 15s
+  external_labels:
+    monitor: 'codelab-monitor'
+scrape_configs:
+  - job_name: 'node'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['133.242.221.148:9100']
