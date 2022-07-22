@@ -1,32 +1,32 @@
 module "eks" {
-  source                  = "terraform-aws-modules/eks/aws"
-  version                 = "18.15.0"
-  
-  cluster_name            = "eks"
-  cluster_version         = "1.21"
+  source  = "terraform-aws-modules/eks/aws"
+  version = "18.15.0"
+
+  cluster_name                   = "eks"
+  cluster_version                = "1.21"
   cluster_endpoint_public_access = true
-  
-  vpc_id                  = module.vpc.vpc_id
+
+  vpc_id = module.vpc.vpc_id
   # public_subnet
-  subnet_ids              = module.vpc.public_subnets
-  enable_irsa             = true
+  subnet_ids  = module.vpc.public_subnets
+  enable_irsa = true
 
   eks_managed_node_groups = {
     green = {
-      min_size     = 1
-      max_size     = 3
-      desired_size = 2
-      instance_types   = ["t3.large"]
+      min_size       = 1
+      max_size       = 3
+      desired_size   = 2
+      instance_types = ["t3.large"]
     }
   }
 
   node_security_group_additional_rules = {
     admission_webhook = {
-      description = "Admission Webhook"
-      protocol    = "tcp"
-      from_port   = 0
-      to_port     = 65535
-      type        = "ingress"
+      description                   = "Admission Webhook"
+      protocol                      = "tcp"
+      from_port                     = 0
+      to_port                       = 65535
+      type                          = "ingress"
       source_cluster_security_group = true
     }
 
@@ -39,11 +39,11 @@ module "eks" {
       self        = true
     }
     egress_node_communications = {
-      description = "Egress Node to node"
-      protocol    = "tcp"
-      from_port   = 0
-      to_port     = 65535
-      type        = "egress"
+      description      = "Egress Node to node"
+      protocol         = "tcp"
+      from_port        = 0
+      to_port          = 65535
+      type             = "egress"
       cidr_blocks      = ["0.0.0.0/0"]
       ipv6_cidr_blocks = ["::/0"]
     }
