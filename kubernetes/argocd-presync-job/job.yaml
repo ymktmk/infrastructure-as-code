@@ -1,0 +1,25 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job
+  namespace: default
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          command: ['sh', '-c', 'echo Hello Kubernetes!']
+          ports:
+          - containerPort: 80
+          envFrom:
+          - secretRef:
+              name: env-secrets
+      restartPolicy: Never
+
