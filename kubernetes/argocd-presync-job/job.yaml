@@ -15,6 +15,7 @@ spec:
       containers:
         - name: sidekiq-exporter
           image: strech/sidekiq-prometheus-exporter:latest
+          command: ['sh', '-c', 'echo $AWS_PASSWORD']
           env:
           - name: REDIS_URL
             value: redis://localhost:6379
