@@ -13,19 +13,41 @@ spec:
   template:
     spec:
       containers:
-        - name: nginx
-          image: nginx:1.14.2
-          command: ['sh', '-c', 'echo $AWS_PASSWORD']
-          ports:
-          - containerPort: 80
-          # SecretManager
+        - name: sidekiq-exporter
+          image: strech/sidekiq-prometheus-exporter:latest
           env:
+          - name: REDIS_URL
+            value: redis://localhost:6379
+          # SecretsManager
           - name: AWS_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: external-secret
                 key: aws_password
-          # envFrom:
-          # - secretRef:
-          #     name: env-secrets
+          ports:
+          - containerPort: 9292
+            name: exporter
+
+        - name: redis
+          image: redis:5-alpine
+          ports:
+          - containerPort: 6379
       restartPolicy: Never
+    # spec:
+    #   containers:
+    #     - name: nginx
+    #       image: nginx:1.14.2
+    #       command: ['sh', '-c', 'echo $AWS_PASSWORD']
+    #       ports:
+    #       - containerPort: 80
+    #       # SecretManager
+    #       env:
+    #       - name: AWS_PASSWORD
+    #         valueFrom:
+    #           secretKeyRef:
+    #             name: external-secret
+    #             key: aws_password
+    #       # envFrom:
+    #       # - secretRef:
+    #       #     name: env-secrets
+    #   restartPolicy: Never
