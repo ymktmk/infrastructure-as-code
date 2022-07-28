@@ -5,6 +5,10 @@ EKS Cluster on Public Subnet
 ### Setup ArgoCD
 
 ```
+rm ~/.kube/config
+```
+
+```
 aws eks update-kubeconfig --region ap-northeast-1 --name eks
 ```
 
