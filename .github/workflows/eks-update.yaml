@@ -34,8 +34,7 @@ jobs:
     # 3. SecretsのAWS_ASSUME_ROLE_ARNが正しくない。変数名が違うか、正しいロール名を渡していないなど
     - name: Run kubectl
       run: |
-        pwd
-        kubectl apply -f ./test/migration-job.yml
+        kubectl apply -f test/migration-job.yml
 
         while true; do
           phase=$(kubectl get pod --selector="job-name=${job_name}" -o 'jsonpath={.items[0].status.phase}')
