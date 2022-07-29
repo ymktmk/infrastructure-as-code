@@ -12,6 +12,7 @@ spec:
       containers:
         - name: go-app
           image: 009554248005.dkr.ecr.ap-northeast-1.amazonaws.com/go-app:latest
+          command: ['sh', '-c', 'echo Hello Kubernetes !']
           ports:
           - containerPort: 8080
             name: go-app
