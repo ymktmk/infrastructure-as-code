@@ -10,7 +10,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "-1"
 spec:
   backoffLimit: 0
-  # activeDeadlineSeconds: 300
+  activeDeadlineSeconds: 300
   template:    
     spec:
       containers:

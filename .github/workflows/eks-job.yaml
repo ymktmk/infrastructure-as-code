@@ -1,7 +1,5 @@
-
 # kubectl edit -n kube-system configmap/aws-auth
 # kubectl describe configmap -n kube-system aws-auth
-# aws sts assume-role --role-arn arn:aws:iam::009554248005:role/eks-cluster-20220729041227318800000002 --role-session-name test
 name: azure-job
 on:
   push:
@@ -31,6 +29,5 @@ jobs:
         aws eks update-kubeconfig --name eks
 
     - name: Run kubectl
-      working-directory: ./test
       run: |
         kubectl get pod -n kube-system

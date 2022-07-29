@@ -1,3 +1,4 @@
+# これを適用する必要がある
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -15,8 +16,3 @@ data:
       groups:
         - system:masters
         
-  # mapUsers: |
-  #   - userarn: <ユーザARN>
-  #     username: <ユーザ名>
-  #     groups:
-  #       - system:masters
