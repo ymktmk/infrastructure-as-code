@@ -35,7 +35,7 @@ jobs:
     - name: Run kubectl
       working-directory: ./test
       run: |
-        kubectl apply -f migration-job.yml
+        kubectl apply -f job.yaml
 
         while true; do
           phase=$(kubectl get pod --selector="job-name=${job_name}" -o 'jsonpath={.items[0].status.phase}')
@@ -60,4 +60,4 @@ jobs:
           fi
         done
 
-        kubectl delete -f migration-job.yml
+        kubectl delete -f job.yaml
