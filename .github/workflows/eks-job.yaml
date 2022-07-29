@@ -28,10 +28,14 @@ jobs:
       run: |
         aws sts assume-role --role-arn arn:aws:iam::009554248005:role/eks-cluster-20220729041227318800000002 --role-session-name test
 
+    - name: confirm 
+      run: aws sts get-caller-identity
+
     - name: Configure EKS
       run: |
         aws eks --region ap-northeast-1 update-kubeconfig --name eks --role-arn arn:aws:iam::009554248005:role/eks-cluster-20220729041227318800000002
-    
+
     - name: Run kubectl
       run: |
+        kubectl config view --minify
         kubectl get pod
