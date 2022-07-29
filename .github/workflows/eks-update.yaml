@@ -36,7 +36,7 @@ jobs:
         kubectl apply -f job.yaml
 
         while true; do
-          phase=$(kubectl get pod --selector="job-name=${job_name}" -o 'jsonpath={.items[0].status.phase}')
+          phase=$(kubectl get pod --selector="job-name=migration" -o 'jsonpath={.items[0].status.phase}')
           if [ "${phase}" != 'Pending' ]; then
             break
           fi
@@ -44,13 +44,13 @@ jobs:
         done
 
         while true; do
-          is_active=$(kubectl get job ${job_name} -o 'jsonpath={.status.active}')
+          is_active=$(kubectl get job migration -o 'jsonpath={.status.active}')
           if [ "${is_active}" != '' ]; then
             sleep 2
             continue
           fi
 
-          succeeded=$(kubectl get job ${job_name} -o 'jsonpath={.status.succeeded}')
+          succeeded=$(kubectl get job migration -o 'jsonpath={.status.succeeded}')
           if [ "${succeeded}" -eq 1 ]; then
             break
           else
