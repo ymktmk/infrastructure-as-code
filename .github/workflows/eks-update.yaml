@@ -26,15 +26,13 @@ jobs:
     - name: Configure EKS
       run: |
         aws eks update-kubeconfig --name eks
-    
-    # AmazonEKS_CNI_Policy AmazonEKSWorkerNodePolicy
+
     # error: You must be logged in to the server (Unauthorized)
-    # 1. IDプロバイダの設定に入力ミスがあった
-    # 2. ロールの信頼ポリシーの指定が間違っている。リポジトリ名が正しくないなど
-    # 3. SecretsのAWS_ASSUME_ROLE_ARNが正しくない。変数名が違うか、正しいロール名を渡していないなど
     - name: Run kubectl
       working-directory: ./test
       run: |
+        kubectl get job migration
+
         kubectl apply -f job.yaml
 
         while true; do

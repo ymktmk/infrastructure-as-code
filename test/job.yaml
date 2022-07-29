@@ -6,8 +6,7 @@ metadata:
   namespace: default
 spec:
   backoffLimit: 0
-  activeDeadlineSeconds: 300
-  template:    
+  template:
     spec:
       containers:
         - name: go-app
