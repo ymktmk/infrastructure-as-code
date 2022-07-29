@@ -25,8 +25,11 @@ jobs:
 
     - name: Configure EKS
       # IAM RoleにEKSの権限を付与する
+      # Cluster作成者と別のIAMロールでアクセスする
       run: |
-        aws eks --region ap-northeast-1 update-kubeconfig --name eks --role-arn arn:aws:iam::009554248005:role/GitHubActionsOIDCTest
+        aws eks --region ap-northeast-1 update-kubeconfig --name eks --role-arn arn:aws:iam::009554248005:role/eks-cluster-20220729041227318800000002
+        
+  # arn:aws:iam::009554248005:role/GitHubActionsOIDCTest
     
     - name: Run kubectl
       run: |
