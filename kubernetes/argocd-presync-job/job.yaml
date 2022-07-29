@@ -4,10 +4,10 @@ kind: Job
 metadata:
   name: job
   namespace: presync
-  # annotations:
-  #   argocd.argoproj.io/hook: PreSync
-  #   argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
-  #   argocd.argoproj.io/sync-wave: "3"
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   backoffLimit: 0
   # activeDeadlineSeconds: 300
@@ -15,25 +15,18 @@ spec:
     spec:
       containers:
         - name: sidekiq-exporter
-          image: strech/sidekiq-prometheus-exporter:latest
+          image: 009554248005.dkr.ecr.ap-northeast-1.amazonaws.com/go-app:latest
           command: ['sh', '-c', 'echo $AWS_PASSWORD']
           env:
-          - name: REDIS_URL
-            value: redis://localhost:6379
-          # SecretsManager
           - name: AWS_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: external-secret
                 key: aws_password
           ports:
-          - containerPort: 9292
-            name: exporter
+          - containerPort: 8080
+            name: go-app
 
-        - name: redis
-          image: redis:5-alpine
-          ports:
-          - containerPort: 6379
       restartPolicy: Never
     # spec:
     #   containers:
