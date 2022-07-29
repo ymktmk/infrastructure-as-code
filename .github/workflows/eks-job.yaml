@@ -1,12 +1,6 @@
-# IAM RoleにEKSの権限を付与する
-# Cluster作成者と別のIAMユーザーでアクセスする
 
-# EKSのKubernetes Clusterを作成した場合、作成したIAM Userの情報は自動的にRBACに登録されるため、
-# Cluster作成ユーザーは認可が通るものの、
-# それ以外のIAMユーザーはRBACの設定はされないので、Unauthorizedとなってしまう訳です。
 # kubectl edit -n kube-system configmap/aws-auth
 # kubectl describe configmap -n kube-system aws-auth
-# --role-arn
 # aws sts assume-role --role-arn arn:aws:iam::009554248005:role/eks-cluster-20220729041227318800000002 --role-session-name test
 name: azure-job
 on:
@@ -28,17 +22,15 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-region: ap-northeast-1
-        role-to-assume: arn:aws:iam::009554248005:role/green-eks-node-group-20220729122253304700000001
-    
-    - name: Install kubectl
-      uses: azure/setup-kubectl@v1
+        role-to-assume: arn:aws:iam::009554248005:role/GitHubActionsOIDCTest
 
-    # kubeconfigでkubectlを使えるように
-    # error: You must be logged in to the server (Unauthorized)
-    - name: Run kubectl
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+    - run: aws sts get-caller-identity
+
+    - name: Configure EKS
       run: |
-        echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/kube_config
-        export KUBECONFIG=/tmp/kube_config
-        kubectl get pods -n kube-system
+        aws eks update-kubeconfig --name eks
+
+    - name: Run kubectl
+      working-directory: ./test
+      run: |
+        kubectl get pod -n kube-system

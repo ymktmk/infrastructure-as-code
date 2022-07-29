@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::009554248005:role/green-eks-node-group-20220729122253304700000001
+      username: system:node:{{EC2PrivateDNSName}}
+      groups:
+        - system:bootstrappers
+        - system:nodes
+    - rolearn: arn:aws:iam::009554248005:role/GitHubActionsOIDCTest
+      username: github-actions-k8s-access
+      groups:
+        - system:masters
+        
+  # mapUsers: |
+  #   - userarn: <ユーザARN>
+  #     username: <ユーザ名>
+  #     groups:
+  #       - system:masters
