@@ -7,6 +7,7 @@
 
 # arn:aws:iam::009554248005:role/green-eks-node-group-20220729041227318700000001
 # kubectl edit -n kube-system configmap/aws-auth
+# kubectl describe configmap -n kube-system aws-auth
 name: job
 
 on:
@@ -32,17 +33,25 @@ jobs:
         role-to-assume: arn:aws:iam::009554248005:role/green-eks-node-group-20220729041227318700000001
         # role-to-assume: arn:aws:iam::009554248005:role/eks-cluster-20220729041227318800000002
     
-    - run: aws sts get-caller-identity
+    # - run: aws sts get-caller-identity
 
-    - name: Configure EKS
-      run: |
-        aws eks update-kubeconfig --name eks
+    # - name: Configure EKS
+    #   run: |
+    #     aws eks update-kubeconfig --name eks
 
+    # - name: Run kubectl
+    #   run: |
+    #     kubectl get pods
+    
     - name: Install kubectl
       uses: azure/setup-kubectl@v1
 
     - name: Run kubectl
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       run: |
+        echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/kube_config
+        export KUBECONFIG=/tmp/kube_config
         kubectl get pods
 
 
