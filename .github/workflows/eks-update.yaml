@@ -33,8 +33,9 @@ jobs:
     # 2. ロールの信頼ポリシーの指定が間違っている。リポジトリ名が正しくないなど
     # 3. SecretsのAWS_ASSUME_ROLE_ARNが正しくない。変数名が違うか、正しいロール名を渡していないなど
     - name: Run kubectl
+      working-directory: ./test
       run: |
-        kubectl apply -f test/migration-job.yml
+        kubectl apply -f migration-job.yml
 
         while true; do
           phase=$(kubectl get pod --selector="job-name=${job_name}" -o 'jsonpath={.items[0].status.phase}')
@@ -59,4 +60,4 @@ jobs:
           fi
         done
 
-        kubectl delete -f ./test/migration-job.yml
+        kubectl delete -f migration-job.yml
