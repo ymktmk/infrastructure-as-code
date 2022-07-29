@@ -23,8 +23,6 @@ jobs:
 
     - name: Configure EKS
       run: |
-        echo $AWS_ACCESS_KEY_ID
-        echo $AWS_SECRET_ACCESS_KEY
         aws eks update-kubeconfig --name eks
     
     # AmazonEKS_CNI_Policy AmazonEKSWorkerNodePolicy
@@ -34,4 +32,6 @@ jobs:
     # 3. SecretsのAWS_ASSUME_ROLE_ARNが正しくない。変数名が違うか、正しいロール名を渡していないなど
     - name: Run kubectl
       run: |
+        echo $AWS_ACCESS_KEY_ID
+        echo $AWS_SECRET_ACCESS_KEY
         kubectl get pods -n kube-system
