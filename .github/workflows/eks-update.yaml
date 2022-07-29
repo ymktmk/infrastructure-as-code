@@ -34,4 +34,29 @@ jobs:
     # 3. SecretsのAWS_ASSUME_ROLE_ARNが正しくない。変数名が違うか、正しいロール名を渡していないなど
     - name: Run kubectl
       run: |
-        kubectl get pods -n kube-system
+        kubectl apply -f ./test/migration-job.yml
+
+        while true; do
+          phase=$(kubectl get pod --selector="job-name=${job_name}" -o 'jsonpath={.items[0].status.phase}')
+          if [ "${phase}" != 'Pending' ]; then
+            break
+          fi
+          sleep 2
+        done
+
+        while true; do
+          is_active=$(kubectl get job ${job_name} -o 'jsonpath={.status.active}')
+          if [ "${is_active}" != '' ]; then
+            sleep 2
+            continue
+          fi
+
+          succeeded=$(kubectl get job ${job_name} -o 'jsonpath={.status.succeeded}')
+          if [ "${succeeded}" -eq 1 ]; then
+            break
+          else
+            exit 1
+          fi
+        done
+
+        kubectl delete -f ./test/migration-job.yml
