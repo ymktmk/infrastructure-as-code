@@ -1,0 +1,30 @@
+name: job
+on:
+  push:
+    branches:
+      - main
+jobs: 
+  migation:
+    name: migration
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ap-northeast-1
+        role-to-assume: arn:aws:iam::009554248005:role/green-eks-node-group-20220729122253304700000001
+
+    - run: aws sts get-caller-identity
+
+    - name: Configure EKS
+      run: |
+        aws eks update-kubeconfig --name eks
+
+    - name: Run kubectl
+      run: |
+        kubectl get pods
