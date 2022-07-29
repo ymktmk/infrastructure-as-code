@@ -1,5 +1,5 @@
 # IAM RoleにEKSの権限を付与する
-# Cluster作成者と別のIAMロールでアクセスする
+# Cluster作成者と別のIAMユーザーでアクセスする
 name: job
 
 on:
@@ -23,10 +23,12 @@ jobs:
       with:
         aws-region: ap-northeast-1
         role-to-assume: arn:aws:iam::009554248005:role/eks-cluster-20220729041227318800000002
+    
+    - run: aws sts get-caller-identity
 
     - name: Configure EKS
       run: |
-        aws eks --region ap-northeast-1 update-kubeconfig --name eks --role-arn arn:aws:iam::009554248005:role/eks-cluster-20220729041227318800000002
+        aws eks --region ap-northeast-1 update-kubeconfig --name eks
 
     - name: Run kubectl
       run: |
