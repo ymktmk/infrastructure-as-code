@@ -40,6 +40,7 @@ jobs:
 
     - name: Run kubectl
       run: |
+        cat ~/.kube/config
         kubectl get pod
 
 
