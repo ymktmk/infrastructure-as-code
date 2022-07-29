@@ -1,0 +1,64 @@
+name: job
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  OIDC_ROLE_ARN: arn:aws:iam::009554248005:role/oidc-external-secrets
+  ECR_REPOSITORY: go-app
+
+jobs: 
+  migation:
+    name: migration
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - uses: actions/checkout@v2
+      # with: 
+      #   fetch-depth: 0
+      #   submodules: recursive
+      #   token: ${{ secrets.CI_USER_GITHUB_TOKEN }}
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ap-northeast-1
+        role-to-assume: $OIDC_ROLE_ARN
+
+    - name: Configure EKS
+      run: |
+        aws eks update-kubeconfig --name eks
+
+    - name: Run kubectl
+      run: |
+        kubectl apply -f ./test/migration-job.yaml
+
+        while true; do
+          phase=$(kubectl get pod --selector="job-name=${job_name}" -o 'jsonpath={.items[0].status.phase}')
+          if [ "${phase}" != 'Pending' ]; then
+            break
+          fi
+          sleep 2
+        done
+
+        while true; do
+          is_active=$(kubectl get job ${job_name} -o 'jsonpath={.status.active}')
+          if [ "${is_active}" != '' ]; then
+            sleep 2
+            continue
+          fi
+
+          succeeded=$(kubectl get job ${job_name} -o 'jsonpath={.status.succeeded}')
+          if [ "${succeeded}" -eq 1 ]; then
+            break
+          else
+            exit 1
+          fi
+        done
+
+        kubectl delete -f ./test/migration-job.yaml

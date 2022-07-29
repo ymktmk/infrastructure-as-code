@@ -1,0 +1,18 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration
+  namespace: default
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+  template:    
+    spec:
+      containers:
+        - name: go-app
+          image: 009554248005.dkr.ecr.ap-northeast-1.amazonaws.com/go-app:latest
+          ports:
+          - containerPort: 8080
+            name: go-app
+      restartPolicy: Never
