@@ -25,7 +25,9 @@ jobs:
 
     - name: Configure EKS
       run: |
-        aws eks --region ap-northeast-1 update-kubeconfig --name eks --role-arn arn:aws:iam::009554248005:role/GitHubActionsOIDCTest/GitHubActions
+        aws eks --region ap-northeast-1 update-kubeconfig --name eks --kubeconfig ./kubeconfig
+        
+  # --role-arn arn:aws:iam::009554248005:role/GitHubActionsOIDCTest
 
     - name: Run kubectl
       run: |
