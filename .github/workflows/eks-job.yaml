@@ -1,5 +1,5 @@
 # IAM RoleにEKSの権限を付与する
-# Cluster作成者と別のIAMユーザーでアクセスする
+# Cluster作成者と別のIAMユーザーでアクセスする --------
 
 # EKSのKubernetes Clusterを作成した場合、作成したIAM Userの情報は自動的にRBACに登録されるため、
 # Cluster作成ユーザーは認可が通るものの、
@@ -42,7 +42,7 @@ jobs:
     # - name: Run kubectl
     #   run: |
     #     kubectl get pods
-    
+
     - name: Install kubectl
       uses: azure/setup-kubectl@v1
 
