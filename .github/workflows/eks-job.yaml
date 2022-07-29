@@ -1,3 +1,5 @@
+# IAM RoleにEKSの権限を付与する
+# Cluster作成者と別のIAMロールでアクセスする
 name: job
 
 on:
@@ -21,16 +23,16 @@ jobs:
       with:
         aws-region: ap-northeast-1
         role-to-assume: arn:aws:iam::009554248005:role/GitHubActionsOIDCTest
-    - run: aws sts get-caller-identity
+    # - run: aws sts get-caller-identity
 
     - name: Configure EKS
-      # IAM RoleにEKSの権限を付与する
-      # Cluster作成者と別のIAMロールでアクセスする
       run: |
         aws eks --region ap-northeast-1 update-kubeconfig --name eks --role-arn arn:aws:iam::009554248005:role/GitHubActionsOIDCTest
+    
+    - name: sts EKS
+      run: |
         aws sts assume-role --role-arn arn:aws:iam::009554248005:role/eks-cluster-20220729041227318800000002 --role-session-name test
     
     - name: Run kubectl
       run: |
-        cat ~/.kube/config
         kubectl get pod
