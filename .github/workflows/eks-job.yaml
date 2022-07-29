@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  OIDC_ROLE_ARN: arn:aws:iam::009554248005:role/oidc-external-secrets
+  OIDC_ROLE_ARN: arn:aws:iam::009554248005:role/GitHubActionsOIDCTest
   ECR_REPOSITORY: go-app
 
 jobs: 
