@@ -38,10 +38,12 @@ jobs:
       run: |
         aws eks update-kubeconfig --name eks
 
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v1
+
     - name: Run kubectl
       run: |
-        cat ~/.kube/config
-        kubectl get pod
+        kubectl get pods
 
 
 # jobs: 
