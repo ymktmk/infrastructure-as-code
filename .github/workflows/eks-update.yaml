@@ -32,6 +32,6 @@ jobs:
     # 3. SecretsのAWS_ASSUME_ROLE_ARNが正しくない。変数名が違うか、正しいロール名を渡していないなど
     - name: Run kubectl
       run: |
-        echo $AWS_ACCESS_KEY_ID
-        echo $AWS_SECRET_ACCESS_KEY
+        cat ~/.aws/config
+        cat ~/.aws/credentials
         kubectl get pods -n kube-system
