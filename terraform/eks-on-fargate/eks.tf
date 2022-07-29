@@ -1,7 +1,7 @@
 # 既にECRへの権限あり
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "18.15.0"
+  version = "18.26.0"
 
   cluster_name                   = "eks"
   cluster_version                = "1.21"
@@ -12,6 +12,7 @@ module "eks" {
   subnet_ids  = module.vpc.public_subnets
   enable_irsa = true
 
+  # EKS Managed Node Group(s)
   eks_managed_node_groups = {
     green = {
       min_size       = 1
@@ -20,6 +21,29 @@ module "eks" {
       instance_types = ["t3.large"]
     }
   }
+
+  # Fargate Profile(s)
+  fargate_profiles = {
+    default = {
+      name = "default"
+      selectors = [
+        {
+          namespace = "default"
+        }
+      ]
+    }
+  }
+
+  # aws-auth configmap
+  manage_aws_auth_configmap = true
+
+  aws_auth_roles = [
+    {
+      rolearn  = "arn:aws:iam::009554248005:role/${aws_iam_role.github_actions_oidc.name}"
+      username = "github-actions-k8s-access"
+      groups   = ["system:masters"]
+    },
+  ]
 
   node_security_group_additional_rules = {
     admission_webhook = {
@@ -30,7 +54,6 @@ module "eks" {
       type                          = "ingress"
       source_cluster_security_group = true
     }
-
     ingress_node_communications = {
       description = "Ingress Node to node"
       protocol    = "tcp"
@@ -64,4 +87,9 @@ provider "kubernetes" {
   host                   = data.aws_eks_cluster.eks.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
   token                  = data.aws_eks_cluster_auth.eks.token
+  # exec {
+  #   api_version = "client.authentication.k8s.io/v1alpha1"
+  #   command     = "aws"
+  #   args = ["eks", "get-token", "--cluster-name", module.eks.cluster_id]
+  # }
 }
