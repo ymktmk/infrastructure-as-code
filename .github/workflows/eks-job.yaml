@@ -5,6 +5,8 @@
 # Cluster作成ユーザーは認可が通るものの、
 # それ以外のIAMユーザーはRBACの設定はされないので、Unauthorizedとなってしまう訳です。
 
+# arn:aws:iam::009554248005:role/green-eks-node-group-20220729041227318700000001
+# kubectl edit -n kube-system configmap/aws-auth
 name: job
 
 on:
@@ -27,7 +29,8 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-region: ap-northeast-1
-        role-to-assume: arn:aws:iam::009554248005:role/eks-cluster-20220729041227318800000002
+        role-to-assume: arn:aws:iam::009554248005:role/green-eks-node-group-20220729041227318700000001
+        # role-to-assume: arn:aws:iam::009554248005:role/eks-cluster-20220729041227318800000002
     
     - run: aws sts get-caller-identity
 
@@ -37,8 +40,6 @@ jobs:
 
     - name: Run kubectl
       run: |
-        cat ~/.kube/config > /tmp/kube_config
-        export KUBECONFIG=/tmp/kube_config
         kubectl get pod
 
 
