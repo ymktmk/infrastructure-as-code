@@ -31,8 +31,6 @@ jobs:
     - name: Run kubectl
       working-directory: ./test
       run: |
-        kubectl get job migration
-
         kubectl apply -f job.yaml
 
         while true; do
