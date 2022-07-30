@@ -1,6 +1,4 @@
-# brew install tflint
-# brew install tfsec
-# brew install pre-commit
+# brew install tflint tfsec pre-commit
 # pre-commit install
 default_stages: [commit]
 repos:
@@ -9,12 +7,11 @@ repos:
       hooks:
           - id: terraform_fmt
           - id: terraform_validate
-          # - id: terraform_tflint
-          # - id: terraform_tfsec
-    # - repo: https://github.com/pre-commit/pre-commit-hooks
-    #   rev: v2.0.0
-    #   hooks:
-    #   -   id: trailing-whitespace
-    #   -   id: end-of-file-fixer
-    #   -   id: check-yaml
-    #   -   id: check-added-large-files
+          - id: terraform_tflint
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v2.0.0
+      hooks:
+      -   id: trailing-whitespace
+      -   id: end-of-file-fixer
+      -   id: check-yaml
+      -   id: check-added-large-files
