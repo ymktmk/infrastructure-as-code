@@ -32,3 +32,8 @@ resource "aws_iam_role" "github_actions_oidc" {
     ]
   })
 }
+
+# resource "aws_iam_role_policy_attachment" "kubectl_execution_policy" {
+#   role = aws_iam_role.github_actions_oidc.name
+#   # policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+# }
