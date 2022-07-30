@@ -3,7 +3,13 @@ name: db-migration
 on:
   push:
     branches:
-      - develop
+      - main
+    paths:
+      - ".github/workflows/db-migration.yaml"
+      - "kubernetes/**"
+      - "terraform/**"
+  workflow_dispatch:
+
 jobs:
   migation:
     name: migration
