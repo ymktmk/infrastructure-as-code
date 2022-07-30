@@ -1,3 +1,4 @@
+# Kubernetes上のService Accountに対してIAM Roleを割り当てAWSにアクセスする
 module "iam_assumable_role_with_oidc_external_secrets" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version = "~> 4"
