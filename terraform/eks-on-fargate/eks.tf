@@ -22,19 +22,19 @@ module "eks" {
     }
   }
 
-  # Fargate Profile(s)
-  fargate_profiles = {
-    default = {
-      name = "default"
-      selectors = [
-        {
-          namespace = "default"
-        }
-      ]
-    }
-  }
+  # Fargate Profile(s) Private Subnetのみサポート
+  # fargate_profiles = {
+  #   default = {
+  #     name = "default"
+  #     selectors = [
+  #       {
+  #         namespace = "default"
+  #       }
+  #     ]
+  #   }
+  # }
 
-  # aws-auth configmap
+  # aws-auth configmap kubectl get configmap/aws-auth -n kube-system -o yamlで確認
   manage_aws_auth_configmap = true
 
   aws_auth_roles = [

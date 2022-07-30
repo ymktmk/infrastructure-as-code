@@ -3,8 +3,8 @@ name: db-migration
 on:
   push:
     branches:
-      - develop
-jobs: 
+      - main
+jobs:
   migation:
     name: migration
     runs-on: ubuntu-latest
