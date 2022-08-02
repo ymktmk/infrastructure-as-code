@@ -1,5 +1,8 @@
+name: Common CI
+description: GitHub Actions show PR URL
+
 runs:
-  using: "Composite"
+  using: "composite"
   steps:
     - name: Get Pull Request Number
       id: pr
