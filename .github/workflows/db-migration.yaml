@@ -3,7 +3,7 @@ name: db-migration
 on:
   push:
     branches:
-      - develop
+      - main
     paths:
       - ".github/workflows/db-migration.yaml"
       - "kubernetes/**"
@@ -20,6 +20,9 @@ jobs:
       contents: read
     steps:
     - uses: actions/checkout@v2
+
+    - name: workflow connect PR
+      uses: ./.github/actions/common
 
     # IAM Roleの信頼関係にoidc認証できるように
     - name: Configure AWS Credentials
