@@ -17,10 +17,10 @@ spec:
       containers:
       # Sidekiq-Exporter
       - name: sidekiq-exporter
-        image: strech/sidekiq-prometheus-exporter:latest
+        image: strech/sidekiq-prometheus-exporter
         env:
         - name: REDIS_URL
-          value: redis://localhost:6379 
+          value: redis://localhost:6379
         ports:
         - containerPort: 9292
           name: exporter
