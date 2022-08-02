@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - ".github/workflows/db-migration.yaml"
+      - ".github/actions/common/action.yaml"
       - "kubernetes/**"
       - "terraform/**"
   workflow_dispatch:
