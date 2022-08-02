@@ -10,6 +10,7 @@ spec:
   source:
     repoURL: 'https://charts.bitnami.com/bitnami'
     targetRevision: 5.4.11
+    chart: external-dns
     helm:
       parameters:
         - name: "rbac.serviceAccountAnnotations.eks\\.amazonaws\\.com/role-arn"
@@ -20,7 +21,6 @@ spec:
         aws:
           zoneType: public
         txtOwnerId: my-hostedzone-identifier
-    chart: external-dns
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: default

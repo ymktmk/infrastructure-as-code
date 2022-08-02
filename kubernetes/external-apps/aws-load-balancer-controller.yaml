@@ -21,11 +21,11 @@ spec:
         - name: clusterName
           value: eks
       values: |
-          serviceAccount:
-            create: true
-            name: aws-load-balancer-controller
-            annotations:
-              eks.amazonaws.com/role-arn: arn:aws:iam::009554248005:role/eks-load-balancer-controller
+        serviceAccount:
+          create: true
+          name: aws-load-balancer-controller
+          annotations:
+            eks.amazonaws.com/role-arn: arn:aws:iam::009554248005:role/eks-load-balancer-controller
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: kube-system
