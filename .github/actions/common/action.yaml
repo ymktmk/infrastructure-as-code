@@ -1,18 +1,17 @@
 runs:
   using: "Composite"
   steps:
-    # ghコマンドのために必要
-    - name: Checkout code
-      uses: actions/checkout@v2
-
     - name: Get Pull Request Number
       id: pr
       run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: bash
 
     - name: Show URL
       run: echo Pull Request is ${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.pull_request_number }}
+      shell: bash
 
     - name: Adding markdown
       run: echo '### [PR \#${{ steps.pr.outputs.pull_request_number }}](${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.pull_request_number }})' >> $GITHUB_STEP_SUMMARY
+      shell: bash
