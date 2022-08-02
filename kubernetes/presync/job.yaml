@@ -11,7 +11,7 @@ metadata:
 spec:
   backoffLimit: 0
   activeDeadlineSeconds: 300
-  template:    
+  template:
     spec:
       containers:
         - name: go-app
@@ -23,41 +23,26 @@ spec:
               secretKeyRef:
                 name: external-secret
                 key: aws_password
+          - name: S3_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: external-secret
+                key: s3_password
+          - name: EC2_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: external-secret
+                key: ec2_password
+          - name: LAMBDA_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: external-secret
+                key: lambda_password
           ports:
           - containerPort: 8080
             name: go-app
-
       restartPolicy: Never
-    # spec:
-    #   containers:
-    #     - name: nginx
-    #       image: nginx:1.14.2
-    #       command: ['sh', '-c', 'echo $AWS_PASSWORD']
-    #       ports:
-    #       - containerPort: 80
-    #       # SecretManager
-    #       env:
-    #       - name: AWS_PASSWORD
-    #         valueFrom:
-    #           secretKeyRef:
-    #             name: external-secret
-    #             key: aws_password
-    #       - name: S3_PASSWORD
-    #         valueFrom:
-    #           secretKeyRef:
-    #             name: external-secret
-    #             key: s3_password
-    #       - name: EC2_PASSWORD
-    #         valueFrom:
-    #           secretKeyRef:
-    #             name: external-secret
-    #             key: ec2_password
-    #       - name: LAMBDA_PASSWORD
-    #         valueFrom:
-    #           secretKeyRef:
-    #             name: external-secret
-    #             key: lambda_password
-    #       # envFrom:
-    #       # - secretRef:
-    #       #     name: env-secrets
-    #   restartPolicy: Never
+
+          # envFrom:
+          # - secretRef:
+          #     name: env-secrets
