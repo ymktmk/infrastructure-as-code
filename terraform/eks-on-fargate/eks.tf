@@ -45,6 +45,20 @@ module "eks" {
     },
   ]
 
+  # 追加のセキュリティグループ(コントロールプレーンSG)
+  # このSGはマネージド型ノードグループのワーカーノード、FargateのPodにはアタッチされない。
+  cluster_security_group_additional_rules = {
+    ingress_cluster_communications = {
+      description                = "Ingress Prometheus"
+      protocol                   = "tcp"
+      from_port                  = 9292
+      to_port                    = 9292
+      type                       = "ingress"
+      source_node_security_group = true
+    }
+  }
+
+  # 追加のノードSG
   node_security_group_additional_rules = {
     admission_webhook = {
       description                   = "Admission Webhook"
@@ -73,6 +87,17 @@ module "eks" {
     }
   }
 
+}
+
+# クラスターセキュリティグループ
+resource "aws_security_group_rule" "ingress_prometheus_communications_for_fargate" {
+  security_group_id = module.eks.cluster_primary_security_group_id
+  type              = "ingress"
+  from_port         = 9292
+  to_port           = 9292
+  protocol          = "tcp"
+  # 追加のノードSGからFargatePodへの通信を許可する
+  source_security_group_id = module.eks.node_security_group_id
 }
 
 data "aws_eks_cluster" "eks" {
