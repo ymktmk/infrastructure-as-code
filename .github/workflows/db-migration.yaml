@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: workflow connect PR
+    - name: Make pull requests traceable from GitHub Actions
       uses: ./.github/actions/common
       with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
