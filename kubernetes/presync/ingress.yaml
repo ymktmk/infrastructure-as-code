@@ -11,7 +11,7 @@ metadata:
 spec:
   rules:
     - host: abc.code-run.ga
-    - http:
+      http:
         paths:
           - path: /
             pathType: Prefix
