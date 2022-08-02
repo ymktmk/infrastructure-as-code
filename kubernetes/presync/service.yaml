@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: presync
+  name: presync
+  labels:
+    app: presync
+spec:
+  selector:
+    app: presync
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  type: NodePort

@@ -15,9 +15,7 @@ spec:
     spec:
       containers:
         - name: go-app
-          # 仮image
-          # image: 009554248005.dkr.ecr.ap-northeast-1.amazonaws.com/go-app:latest
-          image: strech/sidekiq-prometheus-exporter
+          image: 009554248005.dkr.ecr.ap-northeast-1.amazonaws.com/go-app:latest
           command: ['sh', '-c', 'echo $AWS_PASSWORD']
           env:
           - name: AWS_PASSWORD
