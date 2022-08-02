@@ -16,7 +16,7 @@ spec:
           value: ap-northeast-1
         # vpcId Terraformで作られるので後に記入
         - name: vpcId
-          value: 
+          value: vpc-0c925464fba620372
         - name: clusterName
           value: eks
     values: |
