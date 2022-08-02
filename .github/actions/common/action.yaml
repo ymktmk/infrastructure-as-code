@@ -1,5 +1,11 @@
 name: Common CI
+
 description: GitHub Actions show PR URL
+
+inputs:
+  github-token:
+    description: 'github token'
+    required: true
 
 runs:
   using: "composite"
@@ -8,7 +14,7 @@ runs:
       id: pr
       run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
       shell: bash
 
     - name: Show URL

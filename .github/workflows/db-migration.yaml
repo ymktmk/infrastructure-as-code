@@ -24,6 +24,8 @@ jobs:
 
     - name: workflow connect PR
       uses: ./.github/actions/common
+      with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
     # IAM Roleの信頼関係にoidc認証できるように
     - name: Configure AWS Credentials
