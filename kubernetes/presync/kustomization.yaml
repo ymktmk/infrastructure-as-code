@@ -1,0 +1,6 @@
+resources:
+  - deployment.yaml
+  - job.yaml
+  - namespace.yaml
+  - secret.yaml
+  - serviceaccount.yaml
