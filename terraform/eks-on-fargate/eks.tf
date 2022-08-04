@@ -34,7 +34,7 @@ module "eks" {
   #   }
   # }
 
-  # aws-auth configmap kubectl get configmap/aws-auth -n kube-system -o yamlで確認
+  # kubectl get configmap/aws-auth -n kube-system -o yamlで確認
   manage_aws_auth_configmap = true
 
   aws_auth_roles = [
