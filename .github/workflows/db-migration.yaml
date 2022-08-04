@@ -3,7 +3,7 @@ name: db-migration
 on:
   push:
     branches:
-      - main
+      - develop
     paths:
       - ".github/workflows/db-migration.yaml"
       - ".github/actions/common/action.yaml"
