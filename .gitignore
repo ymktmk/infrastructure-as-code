@@ -8,7 +8,14 @@
 *.tfstate.backup
 *.lock.hcl
 
-# ansible
-
+# Ansible
 *hosts
 secrets
+
+# Serverless Framework
+bin
+.serverless
+
+# SSH Key
+example
+example.pub
