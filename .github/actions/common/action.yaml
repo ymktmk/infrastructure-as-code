@@ -1,6 +1,6 @@
 name: Common CI
 
-description: GitHub Actions show PR URL
+description: Make pull requests traceable from GitHub Actions
 
 inputs:
   github-token:
