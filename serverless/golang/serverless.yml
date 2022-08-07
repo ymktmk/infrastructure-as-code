@@ -3,7 +3,10 @@ service: golang-serverless
 provider:
   name: aws
   region: ap-northeast-1
+  stage: dev
   runtime: go1.x
+  eventBridge:
+    useCloudFormation: true
 
 package:
   exclude:
@@ -13,13 +16,42 @@ package:
 
 functions:
   # 関数名
-  sample:
+  ECSTaskControllerFunction:
     handler: bin/main
+    role: ECSTaskControllerLambdaRole
     events:
       # EventBridge
       - schedule: cron(0 1 * * ? *)
-      # API Gateway
-      - http:
-          path: /message
-          method: get
-          integration: lambda
+          # input:
+          #   process: stop
+
+resources:
+  Resources:
+    ECSTaskControllerLambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:service}-lambda-role
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+          - !Ref ECSTaskControllerPolicy
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+    ECSTaskControllerPolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        ManagedPolicyName: ${self:service}-policy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - ecs:UpdateService
+                - ecs:DescribeServices
+              Resource:
+                - arn:aws:ecs:${aws:region}:${aws:accountId}:service/*

@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/ecs"
 )
 
 type Response struct {
@@ -11,10 +14,29 @@ type Response struct {
 
 func Handler() (Response, error) {
 
-	fmt.Println("this is log")
+	svc := ecs.New(session.New())
+
+	input := &ecs.StopTaskInput{
+		Cluster: aws.String("online-code"),
+		Task: aws.String(""),
+	}
+
+	// input := &ecs.UpdateServiceInput{
+	// 	Cluster: aws.String("online-code"),
+	// 	Service: aws.String("online-code"),
+	// 	DesiredCount: aws.Int64(1),
+	// }
+
+	result, err := svc.StopTask(input)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(result)
 
 	return Response{
-		Message: "Go Serverless v1.0! Your function executed successfully!",
+		Message: "ECS Task Stop successfully!",
 	}, nil
 }
 
