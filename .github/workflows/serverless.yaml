@@ -1,0 +1,50 @@
+name: serverless framework
+
+on:
+  pull_request:
+    branches:
+      - release
+    paths:
+      - ".github/workflows/serverless.yaml"
+      - "serverless/**"
+    types: [opened, synchronize, closed]
+
+env:
+  OIDC_ROLE_ARN: ''
+
+jobs:
+  depoly:
+    name: Serverless Framework
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      id-token: write
+      pull-requests: write
+      contents: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ap-northeast-1
+        role-to-assume: ${{ env.OIDC_ROLE_ARN }}
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.18
+
+    - name: Go Build
+      run: |
+        GOOS=linux go build -ldflags="-s -w" -o bin/email_sender email_sender/main.go
+      working-directory: ./serverless/sns-lambda-ses
+
+    - name: Serverless deploy
+      if: github.event.pull_request.merged == true && github.base_ref == 'release'
+      uses: serverless/github-action@v3.1
+      with:
+        args: -c "cd ./serverless && serverless deploy --stage prd"
+        entrypoint: /bin/sh

@@ -1,0 +1,72 @@
+name: terraform
+
+on:
+  pull_request:
+    branches:
+      - release
+    paths:
+      - ".github/workflows/terraform.yaml"
+      - "terraform/**"
+    types: [opened, synchronize, closed]
+
+env:
+  ENV_NAME: prd
+  OIDC_ROLE_ARN: ''
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write
+      pull-requests: write
+      contents: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ap-northeast-1
+        role-to-assume: ${{ env.OIDC_ROLE_ARN }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.2.6
+
+    - name: Terraform Format
+      run: terraform fmt -recursive -check
+
+    # 後で入れる。
+    # - name: tfsec
+    #   uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+    #   with:
+    #     working_directory: ./terraform/${{ env.ENV_NAME }}
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Terraform Plan
+      id: tf_plan
+      working-directory: ./terraform/${{ env.ENV_NAME }}
+      run: |
+        terraform init
+        terraform validate
+        terraform plan
+
+    - uses: robburger/terraform-pr-commenter@v1.5.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TF_WORKSPACE: ${{ env.ENV_NAME }}
+      with:
+        commenter_type: plan
+        commenter_input: ${{ format('{0}{1}', steps.tf_plan.outputs.stdout, steps.tf_plan.outputs.stderr) }}
+        commenter_exitcode: ${{ steps.tf_plan.outputs.exitcode }}
+
+    - name: Terraform Apply
+      if: github.event.pull_request.merged == true && github.base_ref == 'release'
+      working-directory: ./terraform/${{ env.ENV_NAME }}
+      run: |
+          terraform apply -auto-approve
