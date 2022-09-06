@@ -1,0 +1,40 @@
+name: Create a pull request for release.
+
+on:
+  push:
+    branches: 
+      - example
+
+jobs:
+  create-release-pr:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Commit
+        run: |
+          git config --global user.email "ymktmk.tt@gmail.com"
+          git config --global user.name "ymktmk" 
+          echo ${{ github.sha }} > README.md
+          git add .
+          git commit -m "fix image"
+          git branch -M argocd-image-update-${{ github.sha }}
+          git push origin HEAD
+
+      - name: Create pull request
+        uses: actions/github-script@v6
+        env:
+          BRANCH: argocd-image-update-${{ github.sha }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: "docker image 更新",
+              body: `imageTagを${{ github.sha }}に変更する`,
+              head: process.env.BRANCH,
+              base: "main"
+            })
