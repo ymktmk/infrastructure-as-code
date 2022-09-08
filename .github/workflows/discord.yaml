@@ -1,0 +1,27 @@
+name: Discord
+
+on:
+  pull_request:
+    branches:
+      - release
+    types: [opened]
+
+jobs:
+  setup:
+      name: discord
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - name: Discord notification
+          env:
+            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          uses: Ilshidur/action-discord@master
+          with:
+            args: |
+              タイトル: ${{ github.event.pull_request.title }} 
+              コメント: レビューよろしくお願いします 
+              PR URL: ${{ github.event.pull_request.html_url }} 
+              <@860137418647535628>
