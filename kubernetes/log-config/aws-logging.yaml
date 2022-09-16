@@ -27,23 +27,24 @@ data:
         Merge_Log           On
         Buffer_Size         0
         Kube_Meta_Cache_TTL 300s
+        
     [FILTER]
         Name nest
-        Match *
+        Match kube.*
         Operation lift
         Nested_under kubernetes
         Add_prefix kubernetes_
 
     [FILTER]
         Name nest
-        Match *
+        Match kube.*
         Operation lift
         Nested_under kubernetes_labels
         Add_prefix kubernetes_labels_
 
     [FILTER]
         Name nest
-        Match *
+        Match kube.*
         Operation lift
         Nested_under kubernetes_annotations
         Add_prefix kubernetes_annotations_

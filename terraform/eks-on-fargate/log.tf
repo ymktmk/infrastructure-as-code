@@ -149,7 +149,7 @@ resource "aws_glue_catalog_table" "nginx_nginx" {
     "projection.logdate.range"         = "2022/01/01/00,NOW"
     "projection.logdate.interval.unit" = "HOURS"
     "typeOfData"                       = "file"
-    "storage.location.template"        = "s3://${aws_s3_bucket.nginx_logs.id}/eks/nginx/nginx/$${day}/"
+    "storage.location.template"        = "s3://${aws_s3_bucket.nginx_logs.id}/eks/nginx/nginx/$${logdate}/"
   }
   storage_descriptor {
     location      = "s3://${aws_s3_bucket.nginx_logs.id}/eks/nginx/nginx/"
@@ -165,13 +165,69 @@ resource "aws_glue_catalog_table" "nginx_nginx" {
       name = "log"
       type = "string"
     }
+    # columns {
+    #   name = "kubernetes"
+    #   type = "string"
+    # }
     columns {
-      name = "kubernetes"
+      name = "kubernetes_pod_name"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_namespace_name"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_pod_id"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_labels_app"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_labels_eks.amazonaws.com/fargate-profile"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_labels_pod-template-hash"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_annotations_capacityProvisioned"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_annotations_logging"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_annotations_kubernetes.io/psp"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_host"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_container_name"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_docker_id"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_container_hash"
+      type = "string"
+    }
+    columns {
+      name = "kubernetes_container_image"
       type = "string"
     }
   }
   partition_keys {
-    name = "day"
+    name = "logdate"
     type = "string"
   }
 }
