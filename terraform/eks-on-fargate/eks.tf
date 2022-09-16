@@ -8,9 +8,21 @@ module "eks" {
   cluster_endpoint_public_access = true
 
   vpc_id = module.vpc.vpc_id
-  # public_subnet
-  subnet_ids  = module.vpc.public_subnets
+  # public_subnets or private_subnets
+  subnet_ids  = module.vpc.private_subnets
   enable_irsa = true
+
+  cluster_addons = {
+    coredns = {
+      resolve_conflicts = "OVERWRITE"
+    }
+    kube-proxy = {
+      resolve_conflicts = "OVERWRITE"
+    }
+    vpc-cni = {
+      resolve_conflicts = "OVERWRITE"
+    }
+  }
 
   # EKS Managed Node Group(s)
   eks_managed_node_groups = {
@@ -23,16 +35,16 @@ module "eks" {
   }
 
   # Fargate Profile(s) Private Subnetのみサポート
-  # fargate_profiles = {
-  #   default = {
-  #     name = "default"
-  #     selectors = [
-  #       {
-  #         namespace = "default"
-  #       }
-  #     ]
-  #   }
-  # }
+  fargate_profiles = {
+    nginx = {
+      name = "nginx"
+      selectors = [
+        {
+          namespace = "nginx"
+        }
+      ]
+    }
+  }
 
   # kubectl get configmap/aws-auth -n kube-system -o yamlで確認
   manage_aws_auth_configmap = true

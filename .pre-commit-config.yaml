@@ -1,13 +1,13 @@
 # brew install tflint tfsec pre-commit
 # pre-commit install
-default_stages: [commit]
-repos:
-    - repo: https://github.com/antonbabenko/pre-commit-terraform
-      rev: v1.74.1
-      hooks:
-          - id: terraform_fmt
-          - id: terraform_validate
-          - id: terraform_tflint
+# default_stages: [commit]
+# repos:
+#     - repo: https://github.com/antonbabenko/pre-commit-terraform
+#       rev: v1.74.1
+#       hooks:
+#           - id: terraform_fmt
+#           - id: terraform_validate
+#           - id: terraform_tflint
     # - repo: https://github.com/pre-commit/pre-commit-hooks
     #   rev: v2.0.0
     #   hooks:
