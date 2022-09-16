@@ -165,10 +165,6 @@ resource "aws_glue_catalog_table" "nginx_nginx" {
       name = "log"
       type = "string"
     }
-    # columns {
-    #   name = "kubernetes"
-    #   type = "string"
-    # }
     columns {
       name = "kubernetes_pod_name"
       type = "string"
