@@ -10,7 +10,7 @@ module "eks" {
 
   vpc_id = module.vpc.vpc_id
   # public_subnets or private_subnets
-  subnet_ids  = module.vpc.private_subnets
+  subnet_ids  = module.vpc.public_subnets
   enable_irsa = true
 
   cluster_addons = {
@@ -36,27 +36,27 @@ module "eks" {
   }
 
   # Fargate Profile(s) Private Subnetのみサポート
-  fargate_profiles = {
-    nginx = {
-      name = "nginx"
-      selectors = [
-        {
-          namespace = "nginx"
-        }
-      ]
-    }
-  }
+  # fargate_profiles = {
+  #   nginx = {
+  #     name = "nginx"
+  #     selectors = [
+  #       {
+  #         namespace = "nginx"
+  #       }
+  #     ]
+  #   }
+  # }
 
   # kubectl get configmap/aws-auth -n kube-system -o yamlで確認
-  manage_aws_auth_configmap = true
+  # manage_aws_auth_configmap = true
 
-  aws_auth_roles = [
-    {
-      rolearn  = "arn:aws:iam::009554248005:role/${aws_iam_role.github_actions_oidc.name}"
-      username = "github-actions-k8s-access"
-      groups   = ["system:masters"]
-    },
-  ]
+  # aws_auth_roles = [
+  #   {
+  #     rolearn  = "arn:aws:iam::009554248005:role/${aws_iam_role.github_actions_oidc.name}"
+  #     username = "github-actions-k8s-access"
+  #     groups   = ["system:masters"]
+  #   },
+  # ]
 
   # 追加のセキュリティグループ(コントロールプレーンSG)
   # このSGはマネージド型ノードグループのワーカーノード、FargateのPodにはアタッチされない。
