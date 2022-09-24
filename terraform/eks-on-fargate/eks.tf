@@ -54,7 +54,9 @@ module "eks" {
     {
       rolearn  = "arn:aws:iam::009554248005:role/${aws_iam_role.github_actions_oidc.name}"
       username = "github-actions-k8s-access"
-      groups   = ["system:masters"]
+      # !!!
+      groups   = ["job-exec-group"]
+      # groups   = ["system:masters"]
     },
   ]
 
