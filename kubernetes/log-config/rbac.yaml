@@ -7,11 +7,11 @@ metadata:
   namespace: default
 rules:
 - apiGroups: ["batch"]
-  resources: ["jobs"]
-  verbs: ["create", "delete", "get", "watch"]
+  resources: ["jobs", "jobs/status"]
+  verbs: ["create", "get", "delete"]
 - apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["create", "delete", "get", "list", "watch"]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list", "delete", "deletecollection"]
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
