@@ -11,6 +11,9 @@ on:
       - "terraform/**"
     types: [opened, synchronize, closed]
 
+env:
+  ECR_REPOSITORY: 'go-app'
+
 jobs:
   migation:
     name: migration
@@ -34,36 +37,59 @@ jobs:
         aws-region: ap-northeast-1
         role-to-assume: arn:aws:iam::009554248005:role/GitHubActionsOIDC
 
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
     - name: Configure EKS
       run: |
         aws eks update-kubeconfig --name eks
 
+    - name: Change migration image
+      uses: mikefarah/yq@v4.27.2
+      with:
+        cmd: |
+          IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            yq '.spec.template.spec.containers[0].image = strenv(IMAGE)' \
+            -i test/job.yaml
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+
     - name: Run db migration
-      working-directory: ./test
       run: |
-        kubectl apply -f job.yaml
+        wget https://github.com/h3poteto/kube-job/releases/download/v0.2.0/kube-job_0.6.0_linux_amd64.zip
+        unzip kube-job_0.6.0_linux_amd64.zip
+        ./kube-job run --config=$HOME/.kube/config \
+          --template-file=test/job.yaml \
+          --container="go-app"
 
-        while true; do
-          phase=$(kubectl get pod --selector="job-name=migration" -o 'jsonpath={.items[0].status.phase}')
-          if [ "${phase}" != 'Pending' ]; then
-            break
-          fi
-          sleep 2
-        done
+    # - name: Run db migration
+    #   working-directory: ./test
+    #   run: |
+    #     kubectl apply -f job.yaml
 
-        while true; do
-          is_active=$(kubectl get job migration -o 'jsonpath={.status.active}')
-          if [ "${is_active}" != '' ]; then
-            sleep 2
-            continue
-          fi
+    #     while true; do
+    #       phase=$(kubectl get pod --selector="job-name=migration" -o 'jsonpath={.items[0].status.phase}')
+    #       if [ "${phase}" != 'Pending' ]; then
+    #         break
+    #       fi
+    #       sleep 2
+    #     done
 
-          succeeded=$(kubectl get job migration -o 'jsonpath={.status.succeeded}')
-          if [ "${succeeded}" -eq 1 ]; then
-            break
-          else
-            exit 1
-          fi
-        done
+    #     while true; do
+    #       is_active=$(kubectl get job migration -o 'jsonpath={.status.active}')
+    #       if [ "${is_active}" != '' ]; then
+    #         sleep 2
+    #         continue
+    #       fi
 
-        kubectl delete -f job.yaml
+    #       succeeded=$(kubectl get job migration -o 'jsonpath={.status.succeeded}')
+    #       if [ "${succeeded}" -eq 1 ]; then
+    #         break
+    #       else
+    #         exit 1
+    #       fi
+    #     done
+
+    #     kubectl delete -f job.yaml

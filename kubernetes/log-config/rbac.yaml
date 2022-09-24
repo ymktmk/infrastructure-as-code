@@ -1,3 +1,5 @@
+# EKSでIAMユーザをアクセスコントロール (RBAC) https://qiita.com/taishin/items/dfb9a5620f37ffb74fe9
+# * IAMのポリシーではなく、k8sのロールで管理する。以下はJobを実行するためのRBAC
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
