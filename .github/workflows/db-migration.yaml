@@ -54,7 +54,7 @@ jobs:
             -i test/job.yaml
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.sha }}
+        IMAGE_TAG: latest
 
     - name: Run db migration
       run: |

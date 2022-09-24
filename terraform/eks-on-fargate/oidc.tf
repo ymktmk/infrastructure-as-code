@@ -33,7 +33,41 @@ resource "aws_iam_role" "github_actions_oidc" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "kubectl_execution_policy" {
+resource "aws_iam_policy" "github_actions_oidc" {
+  name = "github_actions_wear2_auth"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ecr:GetAuthorizationToken"
+        ],
+        "Resource" : "*",
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:PutImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : "eks:DescribeCluster",
+        "Resource" : "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "github_actions_oidc" {
   role       = aws_iam_role.github_actions_oidc.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  policy_arn = aws_iam_policy.github_actions_oidc.arn
 }
