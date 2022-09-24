@@ -4,12 +4,12 @@ metadata:
   name: job-exec-role
   namespace: default
 rules:
-- apiGroups: ["batch", "extensions"]
+- apiGroups: ["batch"]
   resources: ["jobs"]
-  verbs: ["create", "delete", "get", "list", "update", "patch", "watch"]
+  verbs: ["create", "delete", "get", "watch"]
 - apiGroups: [""]
   resources: ["pods"]
-  verbs: ["create", "delete", "get", "list", "update", "patch", "watch"]
+  verbs: ["create", "delete", "get", "watch"]
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
