@@ -1,4 +1,5 @@
----
+# GitHub Actionsから実行するJobのテンプレートです。
+# Jobの実行にはkube-jobを使います。
 apiVersion: batch/v1
 kind: Job
 metadata:

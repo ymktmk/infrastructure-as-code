@@ -22,7 +22,7 @@ subjects:
 - kind: Group
   name: job-exec-group
   apiGroup: rbac.authorization.k8s.io
-# Role
+# -- Role --
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

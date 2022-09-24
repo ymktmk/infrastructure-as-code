@@ -51,7 +51,7 @@ jobs:
         cmd: |
           IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
             yq '.spec.template.spec.containers[0].image = strenv(IMAGE)' \
-            -i test/job.yaml
+            -i kubernetes/github-actions-job/job.yaml
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: latest
@@ -61,35 +61,5 @@ jobs:
         wget https://github.com/h3poteto/kube-job/releases/download/v0.2.0/kube-job_0.2.0_linux_amd64.zip
         unzip kube-job_0.2.0_linux_amd64.zip
         ./kube-job run --config=$HOME/.kube/config \
-          --template-file=test/job.yaml \
+          --template-file=kubernetes/github-actions-job/job.yaml \
           --container="go-app"
-
-    # - name: Run db migration
-    #   working-directory: ./test
-    #   run: |
-    #     kubectl apply -f job.yaml
-
-    #     while true; do
-    #       phase=$(kubectl get pod --selector="job-name=migration" -o 'jsonpath={.items[0].status.phase}')
-    #       if [ "${phase}" != 'Pending' ]; then
-    #         break
-    #       fi
-    #       sleep 2
-    #     done
-
-    #     while true; do
-    #       is_active=$(kubectl get job migration -o 'jsonpath={.status.active}')
-    #       if [ "${is_active}" != '' ]; then
-    #         sleep 2
-    #         continue
-    #       fi
-
-    #       succeeded=$(kubectl get job migration -o 'jsonpath={.status.succeeded}')
-    #       if [ "${succeeded}" -eq 1 ]; then
-    #         break
-    #       else
-    #         exit 1
-    #       fi
-    #     done
-
-    #     kubectl delete -f job.yaml
