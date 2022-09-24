@@ -14,7 +14,7 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
@@ -39,12 +39,12 @@ spec:
   selector:
     app: nginx
 ---
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: nginx
-spec:
-  minAvailable: 2
-  selector:
-    matchLabels:
-      app: nginx
+# apiVersion: policy/v1
+# kind: PodDisruptionBudget
+# metadata:
+#   name: nginx
+# spec:
+#   minAvailable: 2
+#   selector:
+#     matchLabels:
+#       app: nginx
