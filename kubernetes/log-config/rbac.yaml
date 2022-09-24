@@ -4,7 +4,7 @@ metadata:
   name: job-exec-role
   namespace: default
 rules:
-- apiGroups: [""]
+- apiGroups: ["batch/v1", "v1"]
   resources: ["pods", "jobs"]
   verbs: ["create", "delete", "get", "list", "update", "patch", "watch"]
 ---
