@@ -58,7 +58,7 @@ jobs:
 
     - name: Run db migration
       run: |
-        wget https://github.com/h3poteto/kube-job/releases/download/v0.2.0/kube-job_0.6.0_linux_amd64.zip
+        wget https://github.com/h3poteto/kube-job/releases/download/v0.6.0/kube-job_0.6.0_linux_amd64.zip
         unzip kube-job_0.6.0_linux_amd64.zip
         ./kube-job run --config=$HOME/.kube/config \
           --template-file=test/job.yaml \
