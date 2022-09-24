@@ -44,6 +44,14 @@ module "eks" {
           namespace = "nginx"
         }
       ]
+    },
+    sidekiq = {
+      name = "sidekiq"
+      selectors = [
+        {
+          namespace = "sidekiq"
+        }
+      ]
     }
   }
 
@@ -104,7 +112,7 @@ module "eks" {
 
 }
 
-# クラスターセキュリティグループ
+# クラスターSG (FargateのPodに対してSGを設定)
 resource "aws_security_group_rule" "ingress_prometheus_communications_for_fargate" {
   security_group_id = module.eks.cluster_primary_security_group_id
   type              = "ingress"
