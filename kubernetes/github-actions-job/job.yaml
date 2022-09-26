@@ -1,4 +1,4 @@
----
+# GitHub Actionsから実行するJobのテンプレートです。
 apiVersion: batch/v1
 kind: Job
 metadata:

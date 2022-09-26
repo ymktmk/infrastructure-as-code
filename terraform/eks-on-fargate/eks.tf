@@ -29,19 +29,28 @@ module "eks" {
   eks_managed_node_groups = {
     green = {
       min_size       = 1
-      max_size       = 3
-      desired_size   = 2
+      max_size       = 2
+      desired_size   = 1
       instance_types = ["t3.large"]
     }
   }
 
   # Fargate Profile(s) Private Subnetのみサポート
+  # eks-fargate-podというPod実行Roleが作成される
   fargate_profiles = {
     nginx = {
       name = "nginx"
       selectors = [
         {
           namespace = "nginx"
+        }
+      ]
+    },
+    sidekiq = {
+      name = "sidekiq"
+      selectors = [
+        {
+          namespace = "sidekiq"
         }
       ]
     }
@@ -54,7 +63,8 @@ module "eks" {
     {
       rolearn  = "arn:aws:iam::009554248005:role/${aws_iam_role.github_actions_oidc.name}"
       username = "github-actions-k8s-access"
-      groups   = ["system:masters"]
+      # groups   = ["job-exec-group"] <--- 作成したrole-group
+      groups = ["system:masters"]
     },
   ]
 
@@ -102,16 +112,16 @@ module "eks" {
 
 }
 
-# クラスターセキュリティグループ
-resource "aws_security_group_rule" "ingress_prometheus_communications_for_fargate" {
-  security_group_id = module.eks.cluster_primary_security_group_id
-  type              = "ingress"
-  from_port         = 9292
-  to_port           = 9292
-  protocol          = "tcp"
-  # 追加のノードSGからFargatePodへの通信を許可する
-  source_security_group_id = module.eks.node_security_group_id
-}
+# クラスターSG (FargateのPodに対してSGを設定)
+# resource "aws_security_group_rule" "ingress_prometheus_communications_for_fargate" {
+#   security_group_id = module.eks.cluster_primary_security_group_id
+#   type              = "ingress"
+#   from_port         = 9292
+#   to_port           = 9292
+#   protocol          = "tcp"
+#   # 追加のノードSGからFargatePodへの通信を許可する
+#   source_security_group_id = module.eks.node_security_group_id
+# }
 
 data "aws_eks_cluster" "eks" {
   name = module.eks.cluster_id
@@ -125,4 +135,28 @@ provider "kubernetes" {
   host                   = data.aws_eks_cluster.eks.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
   token                  = data.aws_eks_cluster_auth.eks.token
+}
+
+# Podに対するSecurityGroupPolicy
+resource "aws_security_group" "security_group_policy_for_sidekiq_exporter" {
+  name   = "security_group_policy_for_sidekiq_exporter"
+  vpc_id = module.vpc.vpc_id
+}
+
+resource "aws_security_group_rule" "accept9292" {
+  security_group_id        = aws_security_group.security_group_policy_for_sidekiq_exporter.id
+  type                     = "ingress"
+  source_security_group_id = module.eks.node_security_group_id
+  from_port                = 9292
+  to_port                  = 9292
+  protocol                 = "tcp"
+}
+
+resource "aws_security_group_rule" "out_all" {
+  security_group_id = aws_security_group.security_group_policy_for_sidekiq_exporter.id
+  type              = "egress"
+  cidr_blocks       = ["0.0.0.0/0"]
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "-1"
 }

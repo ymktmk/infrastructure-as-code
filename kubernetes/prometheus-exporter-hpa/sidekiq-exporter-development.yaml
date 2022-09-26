@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: sidekiq
   name: sidekiq-exporter
+  namespace: sidekiq
 spec:
   selector:
     matchLabels:
@@ -29,3 +29,17 @@ spec:
         image: redis:5-alpine
         ports:
         - containerPort: 6379
+---
+# SecurityGroupの内容を編集した際はPodを再作成する
+apiVersion: vpcresources.k8s.aws/v1beta1
+kind: SecurityGroupPolicy
+metadata:
+  name: security-policy
+  namespace: sidekiq
+spec:
+  podSelector:
+    matchLabels:
+      app: sidekiq-exporter
+  securityGroups:
+    groupIds:
+      - sg-09aa20d3925557a19

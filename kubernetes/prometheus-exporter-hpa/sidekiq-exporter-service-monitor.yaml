@@ -1,14 +1,11 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  namespace: sidekiq
   name: sidekiq-exporter-service-monitor
+  namespace: sidekiq
   labels:
     app: sidekiq-exporter-service-monitor
 spec:
-  # namespaceSelector:
-  #   matchNames:
-  #   - sidekiq-exporter
   selector:
     matchLabels:
       app: sidekiq-exporter

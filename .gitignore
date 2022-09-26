@@ -6,7 +6,6 @@
 
 *.tfvars
 *.tfstate.backup
-*.lock.hcl
 
 # Ansible
 *hosts

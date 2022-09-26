@@ -1,15 +1,18 @@
 # GtihubActionsでkubectlを使う方法
 name: db-migration
 on:
-  push:
+  pull_request:
     branches:
-      - develop
+      - release
     paths:
       - ".github/workflows/db-migration.yaml"
       - ".github/actions/common/action.yaml"
       - "kubernetes/**"
       - "terraform/**"
-  workflow_dispatch:
+    types: [opened, synchronize, closed]
+
+env:
+  ECR_REPOSITORY: 'go-app'
 
 jobs:
   migation:
@@ -19,8 +22,10 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Make pull requests traceable from GitHub Actions
       uses: ./.github/actions/common
@@ -34,37 +39,29 @@ jobs:
         aws-region: ap-northeast-1
         role-to-assume: arn:aws:iam::009554248005:role/GitHubActionsOIDC
 
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
     - name: Configure EKS
       run: |
         aws eks update-kubeconfig --name eks
 
-    # kube-job使った方がいい
+    - name: Change migration image
+      uses: mikefarah/yq@v4.27.2
+      with:
+        cmd: |
+          IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            yq '.spec.template.spec.containers[0].image = strenv(IMAGE)' \
+            -i kubernetes/github-actions-job/job.yaml
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: latest
+
     - name: Run db migration
-      working-directory: ./test
       run: |
-        kubectl apply -f job.yaml
-
-        while true; do
-          phase=$(kubectl get pod --selector="job-name=migration" -o 'jsonpath={.items[0].status.phase}')
-          if [ "${phase}" != 'Pending' ]; then
-            break
-          fi
-          sleep 2
-        done
-
-        while true; do
-          is_active=$(kubectl get job migration -o 'jsonpath={.status.active}')
-          if [ "${is_active}" != '' ]; then
-            sleep 2
-            continue
-          fi
-
-          succeeded=$(kubectl get job migration -o 'jsonpath={.status.succeeded}')
-          if [ "${succeeded}" -eq 1 ]; then
-            break
-          else
-            exit 1
-          fi
-        done
-
-        kubectl delete -f job.yaml
+        wget https://github.com/h3poteto/kube-job/releases/download/v0.2.0/kube-job_0.2.0_linux_amd64.zip
+        unzip kube-job_0.2.0_linux_amd64.zip
+        ./kube-job run --config=$HOME/.kube/config \
+          --template-file=kubernetes/github-actions-job/job.yaml \
+          --container="go-app"

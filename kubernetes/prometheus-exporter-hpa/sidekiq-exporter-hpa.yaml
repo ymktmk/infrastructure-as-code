@@ -16,7 +16,7 @@ spec:
       describedObject:
         apiVersion: v1
         kind: Service
-        name: sidekiq-exporter
+        name: sidekiq-exporter-service
       metric:
         name: sidekiq_processes
       target:

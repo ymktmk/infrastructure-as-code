@@ -1,0 +1,30 @@
+# EKSでIAMユーザをアクセスコントロール (RBAC) https://qiita.com/taishin/items/dfb9a5620f37ffb74fe9
+# * IAMのポリシーではなく、k8sのロールで管理する。以下はJobを実行するためのRBAC
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: job-exec-role
+  namespace: default
+rules:
+- apiGroups: ["batch"]
+  resources: ["jobs", "jobs/status"]
+  verbs: ["create", "get", "delete"]
+- apiGroups: [""]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list", "delete", "deletecollection"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: job-exec-group
+  # namespace「default」に対して許可する
+  namespace: default
+subjects:
+- kind: Group
+  name: job-exec-group
+  apiGroup: rbac.authorization.k8s.io
+# -- Role --
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: job-exec-role

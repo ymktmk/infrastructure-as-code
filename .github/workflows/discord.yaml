@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
       - release
+    paths:
+      - ".github/workflows/discord.yaml"
+      - ".github/actions/common/action.yaml"
     types: [opened]
 
 jobs:

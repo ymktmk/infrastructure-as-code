@@ -3,7 +3,7 @@ resource "aws_security_group" "security_group" {
       name   = "security-group"
       vpc_id = aws_vpc.vpc.id
       tags = {
-      Name = "security_group"
+            Name = "security_group"
       }
 }
 

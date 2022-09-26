@@ -25,7 +25,7 @@ resource "aws_s3_bucket_policy" "nginx_logs" {
 }
 
 resource "aws_iam_role" "nginx_logs" {
-  name = "wear2_auth_logs"
+  name = "nginx_logs"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [

@@ -1,27 +1,27 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: nginx
+  name: nginx-ymktmk
   labels:
-    name: nginx
+    name: nginx-ymktmk
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
-  namespace: nginx
+  name: nginx-ymktmk
+  namespace: nginx-ymktmk
 spec:
   selector:
     matchLabels:
-      app: nginx
+      app: nginx-ymktmk
   replicas: 2
   template:
     metadata:
       labels:
-        app: nginx
+        app: nginx-ymktmk
     spec:
       containers:
-      - name: nginx
+      - name: nginx-ymktmk
         image: nginx:latest
         ports:
         - containerPort: 80
@@ -29,22 +29,22 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
-  namespace: nginx
+  name: nginx-ymktmk
+  namespace: nginx-ymktmk
 spec:
   type: NodePort
   ports:
     - port: 80
       nodePort: 30000
   selector:
-    app: nginx
+    app: nginx-ymktmk
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: nginx
+  name: nginx-ymktmk
 spec:
   minAvailable: 2
   selector:
     matchLabels:
-      app: nginx
+      app: nginx-ymktmk

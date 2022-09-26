@@ -4,4 +4,3 @@ metadata:
   name: sidekiq
   labels:
     name: sidekiq
-
