@@ -1,7 +1,7 @@
 #!/bin/sh
 
 stack_name=$1
-changeset_name=${stack}-$(date +%Y%m%d%H%M%S)
+changeset_name=${stack_name}-$(date +%Y%m%d%H%M%S)
 
 create_changeset=`aws cloudformation create-change-set \
                   --stack-name $stack_name \
