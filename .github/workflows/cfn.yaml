@@ -34,7 +34,7 @@ jobs:
       run: |
         comment_body_file="/tmp/pr_comment_body.txt"
 
-        chomd 777 ./cloudformation/output_changeset_as_markdown.sh 
+        chmod 777 ./cloudformation/output_changeset_as_markdown.sh 
         ./cloudformation/output_changeset_as_markdown.sh test >> ${comment_body_file}
 
         comment_title="### CFn change sets"
