@@ -3,10 +3,10 @@
 stack_name=$1
 changeset_name=${stack}-$(date +%Y%m%d%H%M%S)
 
-create_changeset=`aws cloudformation create-change-set 
-  --stack-name $stack_name \
-  --change-set-name $changeset_name \
-  --template-body=./cloudformation/vpc.yaml`
+create_changeset=`aws cloudformation create-change-set \
+                  --stack-name $stack_name \
+                  --change-set-name $changeset_name \
+                  --template-body=./cloudformation/vpc.yaml`
 
 changeset_id=`echo ${create_changeset} | jq -r '.Id'`
 changeset_json=$(aws cloudformation describe-change-set --change-set-name $changeset_id)
