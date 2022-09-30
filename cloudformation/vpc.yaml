@@ -90,15 +90,15 @@ Resources:
         - Key: Name
           Value: CfRouteTableForPrivateSubnet
 
-  CfRouteForPrivateSubnet:
-    Type: AWS::EC2::Route
-    Properties:
-      RouteTableId: !Ref CfRouteTableForPrivateSubnet
-      DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref CfNatGateway
+  # CfRouteForPrivateSubnet:
+  #   Type: AWS::EC2::Route
+  #   Properties:
+  #     RouteTableId: !Ref CfRouteTableForPrivateSubnet
+  #     DestinationCidrBlock: 0.0.0.0/0
+  #     NatGatewayId: !Ref CfNatGateway
 
-  CfAssocciateRouteTableForPrivateSubnet:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      RouteTableId: !Ref CfRouteTableForPrivateSubnet
-      SubnetId: !Ref CfPrivateSubnet
+  # CfAssocciateRouteTableForPrivateSubnet:
+  #   Type: AWS::EC2::SubnetRouteTableAssociation
+  #   Properties:
+  #     RouteTableId: !Ref CfRouteTableForPrivateSubnet
+  #     SubnetId: !Ref CfPrivateSubnet

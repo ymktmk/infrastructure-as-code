@@ -9,6 +9,10 @@ on:
       - "cloudformation/**"
     types: [opened, synchronize, closed]
 
+# スタックを作成
+# 変更セットの作成
+# 変更セットの差分を見る
+# 実行する
 jobs:
   cfn-deploy:
     name: cloudformation
@@ -30,9 +34,7 @@ jobs:
       run: |
         comment_body_file="/tmp/pr_comment_body.txt"
 
-        for id in $(echo "$changeset_id_list"); do
-          ./cloudformation/output_changeset_as_markdown.sh $id >> ${comment_body_file}
-        done
+        ./cloudformation/output_changeset_as_markdown.sh test >> ${comment_body_file}
 
         comment_title="### CFn change sets"
         sed -i "1i ${comment_title}" ${comment_body_file}
@@ -47,9 +49,11 @@ jobs:
         header: ${{ steps.make-cfn-comment.outputs.header }}
         path: ${{ steps.make-cfn-comment.outputs.result }}
 
-    # - name: CloudFormation Apply
-    #   if: github.event.pull_request.merged == true && github.base_ref == 'release'
-    #   with:
-    #       name: test-cfn-stack
-    #       template: ./cloudformation/vpc.yaml
-    #       no-fail-on-empty-changeset: "1"
+    - name: CloudFormation Apply
+      if: github.event.pull_request.merged == true && github.base_ref == 'release'
+      with:
+          # スタック名
+          name: test
+          # ファイル名
+          template: ./cloudformation/vpc.yaml
+          no-fail-on-empty-changeset: "1"

@@ -1,5 +1,9 @@
 #!/bin/sh
-changeset_id=$1
+stack=$1
+create_changeset=`aws cloudformation create-change-set 
+  --stack-name $stack \
+  --template-body=./cloudformation/vpc.yaml`
+changeset_id=`echo ${create_changeset} | jq -r '.Id'`
 changeset_json=$(aws cloudformation describe-change-set --change-set-name $changeset_id)
 stack_name=$(echo "$changeset_json" | jq -r .StackName)
 changes=$(echo "$changeset_json" | jq -r .Changes)
