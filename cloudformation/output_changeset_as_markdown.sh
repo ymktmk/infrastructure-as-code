@@ -8,6 +8,8 @@ create_changeset=`aws cloudformation create-change-set \
                   --change-set-name $changeset_name \
                   --template-body file://$PWD/cloudformation/vpc.yaml`
 
+sleep 10
+
 changeset_id=$(echo ${create_changeset} | jq -r .Id)
 changeset_json=$(aws cloudformation describe-change-set --change-set-name $changeset_id)
 changes=$(echo "$changeset_json" | jq -r .Changes)
