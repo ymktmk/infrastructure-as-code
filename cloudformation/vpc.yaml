@@ -1,14 +1,14 @@
-# AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: 2010-09-09
 
-# Resources:
-#   CfVPC:
-#     Type: AWS::EC2::VPC
-#     Properties:
-#       CidrBlock: 10.1.0.0/16
-#       Tags:
-#         -
-#           Key: Name
-#           Value: CfVPC
+Resources:
+  CfVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.1.0.0/16
+      Tags:
+        -
+          Key: Name
+          Value: CfVPC
 
 #   CfPublicSubnet:
 #     Type: AWS::EC2::Subnet
