@@ -1,0 +1,65 @@
+name: deploy cfn
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/cfn.yaml"
+      - "cloudformation/**"
+    types: [opened, synchronize, closed]
+
+# できないこと ＊ファイル内のリソースを全部削除すること(stackの削除は自分でやってくれ)
+# 新しいスタックを作成する
+# stackとファイルを１体１で管理する
+
+# スタックを作成
+# 変更セットの作成
+# 変更セットの差分を見る
+# 実行する
+jobs:
+  cfn-deploy:
+    name: cloudformation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-1
+        
+    - name: Make comment body
+      id: make-cfn-comment
+      run: |
+        comment_body_file="/tmp/pr_comment_body.txt"
+
+        chmod 777 ./cloudformation/output_changeset_as_markdown.sh 
+        ./cloudformation/output_changeset_as_markdown.sh test >> ${comment_body_file}
+
+        comment_title="### CFn change sets"
+        sed -i "1i ${comment_title}" ${comment_body_file}
+
+        echo ::set-output name=header::changeset-comment
+        echo ::set-output name=result::${comment_body_file}
+
+    - name: Comment on pull request
+      uses: marocchino/sticky-pull-request-comment@v1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        header: ${{ steps.make-cfn-comment.outputs.header }}
+        path: ${{ steps.make-cfn-comment.outputs.result }}
+
+    - name: CloudFormation Apply
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      if: github.event.pull_request.merged == true && github.base_ref == 'main'
+      with:
+        # スタック名
+        name: test
+        # ファイル名
+        template: ./cloudformation/vpc.yaml
+        no-fail-on-empty-changeset: "1"
