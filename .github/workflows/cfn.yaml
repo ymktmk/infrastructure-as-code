@@ -9,6 +9,10 @@ on:
       - "cloudformation/**"
     types: [opened, synchronize, closed]
 
+# できないこと ＊ファイル内のリソースを全部削除すること(stackの削除は自分でやってくれ)
+# 新しいスタックを作成する
+# stackとファイルを１体１で管理する
+
 # スタックを作成
 # 変更セットの作成
 # 変更セットの差分を見る
@@ -52,7 +56,7 @@ jobs:
 
     - name: CloudFormation Apply
       uses: aws-actions/aws-cloudformation-github-deploy@v1
-      if: github.event.pull_request.merged == true && github.base_ref == 'release'
+      if: github.event.pull_request.merged == true && github.base_ref == 'main'
       with:
         # スタック名
         name: test
