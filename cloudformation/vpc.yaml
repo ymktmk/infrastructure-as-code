@@ -65,23 +65,6 @@ Resources:
       RouteTableId: !Ref CfRouteTableForPublicSubnet
       SubnetId: !Ref CfPublicSubnet
 
-  NatGatewayEIP:
-    Type: AWS::EC2::EIP
-    Properties:
-      Domain: vpc
-
-  CfNatGateway:
-    Type: AWS::EC2::NatGateway
-    Properties:
-      AllocationId:
-        Fn::GetAtt:
-          - NatGatewayEIP
-          - AllocationId
-      SubnetId: !Ref CfPublicSubnet
-      Tags:
-        - Key: Name
-          Value: CfNatGateway
-
   CfRouteTableForPrivateSubnet:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -89,13 +72,6 @@ Resources:
       Tags:
         - Key: Name
           Value: CfRouteTableForPrivateSubnet
-
-  CfRouteForPrivateSubnet:
-    Type: AWS::EC2::Route
-    Properties:
-      RouteTableId: !Ref CfRouteTableForPrivateSubnet
-      DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref CfNatGateway
 
   CfAssocciateRouteTableForPrivateSubnet:
     Type: AWS::EC2::SubnetRouteTableAssociation
