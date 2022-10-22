@@ -29,8 +29,8 @@ module "eks" {
   eks_managed_node_groups = {
     green = {
       min_size       = 1
-      max_size       = 2
-      desired_size   = 1
+      max_size       = 3
+      desired_size   = 2
       instance_types = ["t3.large"]
     }
   }
@@ -38,6 +38,22 @@ module "eks" {
   # Fargate Profile(s) Private Subnetのみサポート
   # eks-fargate-podというPod実行Roleが作成される
   fargate_profiles = {
+    go-app = {
+      name = "go-app"
+      selectors = [
+        {
+          namespace = "go-app"
+        }
+      ]
+    }
+    datadog = {
+      name = "datadog"
+      selectors = [
+        {
+          namespace = "datadog"
+        }
+      ]
+    }
     nginx = {
       name = "nginx"
       selectors = [

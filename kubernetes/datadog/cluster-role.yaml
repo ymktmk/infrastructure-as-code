@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: datadog-agent
+  name: datadog-agent-for-sidecar
 rules:
   - apiGroups:
       - ""
@@ -70,11 +70,11 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: datadog-agent
+  name: datadog-agent-for-sidecar
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: datadog-agent
+  name: datadog-agent-for-sidecar
 subjects:
   - kind: ServiceAccount
     name: go-app
