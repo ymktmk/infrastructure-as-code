@@ -77,5 +77,5 @@ roleRef:
   name: datadog-agent-for-sidecar
 subjects:
   - kind: ServiceAccount
-    name: go-app
-    namespace: go-app
+    name: go
+    namespace: go
