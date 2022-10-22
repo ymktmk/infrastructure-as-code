@@ -1,41 +1,41 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: go-app
+  name: go
   labels:
-    name: go-app
+    name: go
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: go-app
-  namespace: go-app
+  name: go
+  namespace: go
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-app
-  namespace: go-app
+  name: go
+  namespace: go
   labels:
-    app: go-app
+    app: go
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: go-app
+      app: go
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: go-app
+        app: go
     spec:
-      serviceAccountName: go-app
+      serviceAccountName: go
       shareProcessNamespace: true
       containers:
-      - name: go-app
+      - name: go
         imagePullPolicy: Always
-        image: '009554248005.dkr.ecr.ap-northeast-1.amazonaws.com/go-app:latest'
+        image: '009554248005.dkr.ecr.ap-northeast-1.amazonaws.com/go:latest'
         ports:
           - containerPort: 8080
             protocol: TCP
@@ -52,7 +52,7 @@ spec:
         - name: DD_API_KEY
           valueFrom:
             secretKeyRef:
-              name: go-app-secrets
+              name: go-secrets
               key: datadog_api_key
         - name: DD_SITE
           value: "datadoghq.com"
@@ -80,7 +80,7 @@ spec:
         - name: DD_CLUSTER_AGENT_AUTH_TOKEN
           valueFrom:
             secretKeyRef:
-              name: go-app-secrets
+              name: go-secrets
               key: token
         - name: DD_COLLECT_KUBERNETES_EVENTS
           value: "true"
@@ -98,4 +98,4 @@ spec:
         - name: DD_CLUSTER_AGENT_KUBERNETES_SERVICE_NAME
           value: "datadog-agent-cluster-agent"
         - name: DD_CLUSTER_NAME
-          value: "go-app-services-prd-cluster"
+          value: "go-services-prd-cluster"

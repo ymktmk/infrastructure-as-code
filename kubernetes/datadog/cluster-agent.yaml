@@ -29,10 +29,10 @@ spec:
     name: datadog-secrets
     creationPolicy: Owner
   data:
-  - secretKey: apikey
+  - secretKey: api-key
     remoteRef:
       key: datadog/apikey
-  - secretKey: appkey
+  - secretKey: app-key
     remoteRef:
       key: datadog/appkey
   - secretKey: token
@@ -89,9 +89,9 @@ spec:
         - name: "datadog.tags[0]"
           value: "env:prd"
         - name: "datadog.tags[1]"
-          value: "system:go-app-services-prd"
+          value: "system:go-services-prd"
         - name: "datadog.clusterName"
-          value: "go-app-services-prd-cluster"
+          value: "go-services-prd-cluster"
     chart: datadog
   destination:
     server: 'https://kubernetes.default.svc'
