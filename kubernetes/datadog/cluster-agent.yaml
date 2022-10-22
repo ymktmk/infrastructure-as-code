@@ -1,0 +1,102 @@
+# https://github.com/DataDog/helm-charts/blob/main/charts/datadog/README.md
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: datadog
+---
+apiVersion: external-secrets.io/v1alpha1
+kind: SecretStore
+metadata:
+  name: datadog
+  namespace: datadog
+spec:
+  provider:
+    aws:
+      service: SecretsManager
+      region: ap-northeast-1
+---
+apiVersion: external-secrets.io/v1alpha1
+kind: ExternalSecret
+metadata:
+  name: datadog-secrets
+  namespace: datadog
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    name: datadog
+    kind: SecretStore
+  target:
+    name: datadog-secrets
+    creationPolicy: Owner
+  data:
+  - secretKey: apikey
+    remoteRef:
+      key: datadog/apikey
+  - secretKey: appkey
+    remoteRef:
+      key: datadog/appkey
+  - secretKey: token
+    remoteRef:
+      key: datadog/cluster-agent-token
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: datadog-agent
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://helm.datadoghq.com
+    targetRevision: 2.27.2
+    helm:
+      values: |
+        targetSystem: linux
+        datadog:
+          apiKeyExistingSecret: datadog-secrets
+          appKeyExistingSecret: datadog-secrets
+          leaderElection: true
+          collectEvents: true
+          kubeStateMetricsEnabled: false
+          kubeStateMetricsCore:
+            enabled: true
+          logLevel: INFO
+          apm:
+            enabled: true
+          processAgent:
+            enabled: true
+            processCollection: true
+        clusterAgent:
+          tokenExistingSecret: datadog-secrets
+          enabled: true
+          metricsProvider:
+            enabled: true
+          rbac:
+            create: true
+        clusterChecks:
+          enabled: true
+        clusterChecksRunner:
+          enabled: true
+          replicas: 2
+          rbac:
+            create: true
+        agents:
+          rbac:
+            create: true
+      parameters:
+        - name: "datadog.tags[0]"
+          value: "env:prd"
+        - name: "datadog.tags[1]"
+          value: "system:go-app-services-prd"
+        - name: "datadog.clusterName"
+          value: "go-app-services-prd-cluster"
+    chart: datadog
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: datadog
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
