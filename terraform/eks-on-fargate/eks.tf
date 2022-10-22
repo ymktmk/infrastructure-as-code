@@ -15,12 +15,15 @@ module "eks" {
 
   cluster_addons = {
     coredns = {
+      addon_version     = "v1.8.4-eksbuild.2"
       resolve_conflicts = "OVERWRITE"
     }
     kube-proxy = {
+      addon_version     = "v1.21.14-eksbuild.2"
       resolve_conflicts = "OVERWRITE"
     }
     vpc-cni = {
+      addon_version     = "v1.11.4-eksbuild.1"
       resolve_conflicts = "OVERWRITE"
     }
   }
@@ -46,6 +49,7 @@ module "eks" {
         }
       ]
     }
+
     datadog = {
       name = "datadog"
       selectors = [
@@ -54,6 +58,7 @@ module "eks" {
         }
       ]
     }
+    
     nginx = {
       name = "nginx"
       selectors = [
@@ -61,7 +66,8 @@ module "eks" {
           namespace = "nginx"
         }
       ]
-    },
+    }
+
     sidekiq = {
       name = "sidekiq"
       selectors = [
@@ -90,8 +96,8 @@ module "eks" {
     ingress_cluster_communications = {
       description                = "Ingress Prometheus"
       protocol                   = "tcp"
-      from_port                  = 9292
-      to_port                    = 9292
+      from_port                  = 3000
+      to_port                    = 3000
       type                       = "ingress"
       source_node_security_group = true
     }
@@ -128,17 +134,6 @@ module "eks" {
 
 }
 
-# クラスターSG (FargateのPodに対してSGを設定)
-# resource "aws_security_group_rule" "ingress_prometheus_communications_for_fargate" {
-#   security_group_id = module.eks.cluster_primary_security_group_id
-#   type              = "ingress"
-#   from_port         = 9292
-#   to_port           = 9292
-#   protocol          = "tcp"
-#   # 追加のノードSGからFargatePodへの通信を許可する
-#   source_security_group_id = module.eks.node_security_group_id
-# }
-
 data "aws_eks_cluster" "eks" {
   name = module.eks.cluster_id
 }
@@ -153,26 +148,59 @@ provider "kubernetes" {
   token                  = data.aws_eks_cluster_auth.eks.token
 }
 
-# Podに対するSecurityGroupPolicy
-resource "aws_security_group" "security_group_policy_for_sidekiq_exporter" {
-  name   = "security_group_policy_for_sidekiq_exporter"
-  vpc_id = module.vpc.vpc_id
-}
-
-resource "aws_security_group_rule" "accept9292" {
-  security_group_id        = aws_security_group.security_group_policy_for_sidekiq_exporter.id
+# --- EC2に対するSG (coreDNSとの疎通) ----
+# Fargate(Pod) -> EC2 
+resource "aws_security_group_rule" "ingress_tcp_node_communications_for_fargate" {
+  security_group_id        = module.eks.node_security_group_id
   type                     = "ingress"
-  source_security_group_id = module.eks.node_security_group_id
-  from_port                = 9292
-  to_port                  = 9292
+  from_port                = 53
+  to_port                  = 53
   protocol                 = "tcp"
+  source_security_group_id = module.eks.cluster_primary_security_group_id
 }
 
-resource "aws_security_group_rule" "out_all" {
-  security_group_id = aws_security_group.security_group_policy_for_sidekiq_exporter.id
-  type              = "egress"
-  cidr_blocks       = ["0.0.0.0/0"]
-  from_port         = 0
-  to_port           = 65535
-  protocol          = "-1"
+resource "aws_security_group_rule" "ingress_udp_node_communications_for_fargate" {
+  security_group_id        = module.eks.node_security_group_id
+  type                     = "ingress"
+  from_port                = 53
+  to_port                  = 53
+  protocol                 = "udp"
+  source_security_group_id = module.eks.cluster_primary_security_group_id
 }
+
+
+# EC2 -> Fargate(Pod)
+# resource "aws_security_group_rule" "ingress_prometheus_communications_for_fargate" {
+#   security_group_id = module.eks.cluster_primary_security_group_id
+#   type              = "ingress"
+#   from_port         = 9292
+#   to_port           = 9292
+#   protocol          = "tcp"
+#   # 追加のノードSGからFargatePodへの通信を許可する
+#   source_security_group_id = module.eks.node_security_group_id
+# }
+
+# --- Podに対するSecurityGroupPolicy ---
+# EC2 -> Fargate(Pod)
+# resource "aws_security_group" "security_group_policy_for_sidekiq_exporter" {
+#   name   = "security_group_policy_for_sidekiq_exporter"
+#   vpc_id = module.vpc.vpc_id
+# }
+
+# resource "aws_security_group_rule" "accept9292" {
+#   security_group_id        = aws_security_group.security_group_policy_for_sidekiq_exporter.id
+#   type                     = "ingress"
+#   source_security_group_id = module.eks.node_security_group_id
+#   from_port                = 9292
+#   to_port                  = 9292
+#   protocol                 = "tcp"
+# }
+
+# resource "aws_security_group_rule" "out_all" {
+#   security_group_id = aws_security_group.security_group_policy_for_sidekiq_exporter.id
+#   type              = "egress"
+#   cidr_blocks       = ["0.0.0.0/0"]
+#   from_port         = 0
+#   to_port           = 65535
+#   protocol          = "-1"
+# }
