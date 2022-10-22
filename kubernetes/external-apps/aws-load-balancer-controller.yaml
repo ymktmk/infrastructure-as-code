@@ -1,35 +1,35 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: aws-load-balancer-controller
-  namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: default
-  source:
-    repoURL: 'https://aws.github.io/eks-charts'
-    targetRevision: 1.3.1
-    chart: aws-load-balancer-controller
-    helm:
-      parameters:
-        - name: region
-          value: ap-northeast-1
-        # vpcId Terraformで作られるので後に記入
-        - name: vpcId
-          value: vpc-0c925464fba620372
-        - name: clusterName
-          value: eks
-      values: |
-        serviceAccount:
-          create: true
-          name: aws-load-balancer-controller
-          annotations:
-            eks.amazonaws.com/role-arn: arn:aws:iam::009554248005:role/eks-load-balancer-controller
-  destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: default
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: aws-load-balancer-controller
+#   namespace: argocd
+#   finalizers:
+#     - resources-finalizer.argocd.argoproj.io
+# spec:
+#   project: default
+#   source:
+#     repoURL: 'https://aws.github.io/eks-charts'
+#     targetRevision: 1.3.1
+#     chart: aws-load-balancer-controller
+#     helm:
+#       parameters:
+#         - name: region
+#           value: ap-northeast-1
+#         # vpcId Terraformで作られるので後に記入
+#         - name: vpcId
+#           value: vpc-0c925464fba620372
+#         - name: clusterName
+#           value: eks
+#       values: |
+#         serviceAccount:
+#           create: true
+#           name: aws-load-balancer-controller
+#           annotations:
+#             eks.amazonaws.com/role-arn: arn:aws:iam::009554248005:role/eks-load-balancer-controller
+#   destination:
+#     server: 'https://kubernetes.default.svc'
+#     namespace: default
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
