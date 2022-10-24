@@ -15,7 +15,7 @@ changeset_json=$(aws cloudformation describe-change-set --change-set-name $chang
 changes=$(echo "$changeset_json" | jq -r .Changes)
 changes_length=$(echo "$changes" | jq length)
 
-echo "<code>$stack_name ($changes_length changes)</code>" # クリックで展開できるやつ
+echo "<code>$stack_name ($changes_length changes)</code>"
 echo
 if [ $changes_length -gt 0 ]; then
 echo '|Action|論理ID|物理ID|リソースタイプ|置換|' # 少しでも横幅を減らすためにActionだけ英語
@@ -30,7 +30,7 @@ for i in $( seq 0 $(($changes_length - 1)) ); do
   echo "|$col_1|$col_2|$col_3|$col_4|$col_5|"
 done
 fi
-echo '<details>view json' # インデントを付ける目的でリストにしている
+echo '<details>'
 echo
 echo '```json'
 echo "$changeset_json"
