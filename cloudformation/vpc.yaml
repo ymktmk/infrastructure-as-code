@@ -8,11 +8,11 @@ Parameters:
   PublicSubnetCIDR:
     Type: String
     Default: ''
-    # Default: 10.1.1.0/24
+    # Default: 10.1.3.0/24
   PrivateSubnetCIDR:
     Type: String
     Default: ''
-    # Default: 10.1.2.0/24
+    # Default: 10.1.4.0/24
 
 Resources:
   CfVPC:
