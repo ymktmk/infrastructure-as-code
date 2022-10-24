@@ -30,9 +30,9 @@ for i in $( seq 0 $(($changes_length - 1)) ); do
   echo "|$col_1|$col_2|$col_3|$col_4|$col_5|"
 done
 fi
-echo '<ul><li><details>view json' # インデントを付ける目的でリストにしている
+echo '<details>view json' # インデントを付ける目的でリストにしている
 echo
 echo '```json'
 echo "$changeset_json"
 echo '```'
-echo '</details></li></ul>'
+echo '</details>'
