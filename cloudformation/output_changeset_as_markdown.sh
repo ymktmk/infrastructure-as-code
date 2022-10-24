@@ -15,7 +15,7 @@ changeset_json=$(aws cloudformation describe-change-set --change-set-name $chang
 changes=$(echo "$changeset_json" | jq -r .Changes)
 changes_length=$(echo "$changes" | jq length)
 
-echo "<details><summary><code>$stack_name ($changes_length changes)</code></summary>" # クリックで展開できるやつ
+echo "<summary><code>$stack_name ($changes_length changes)</code></summary>" # クリックで展開できるやつ
 echo
 if [ $changes_length -gt 0 ]; then
 echo '|Action|論理ID|物理ID|リソースタイプ|置換|' # 少しでも横幅を減らすためにActionだけ英語
@@ -35,4 +35,4 @@ echo
 echo '```json'
 echo "$changeset_json"
 echo '```'
-echo '</details></li></ul></details>'
+echo '</details></li></ul>'
