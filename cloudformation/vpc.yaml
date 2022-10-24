@@ -3,12 +3,15 @@ AWSTemplateFormatVersion: 2010-09-09
 Parameters:
   VpcCIDR:
     Type: String
+    Default: ''
     # Default: 10.1.0.0/16
   PublicSubnetCIDR:
     Type: String
+    Default: ''
     # Default: 10.1.1.0/24
   PrivateSubnetCIDR:
     Type: String
+    Default: ''
     # Default: 10.1.2.0/24
 
 Resources:
