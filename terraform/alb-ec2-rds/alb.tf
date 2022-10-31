@@ -35,7 +35,7 @@ resource "aws_security_group" "alb_security_group" {
 # リスナー
 resource "aws_lb_listener" "lb_listener" {
       load_balancer_arn = aws_lb.alb.arn
-      port              = "80"
+      port              = 80
       protocol          = "HTTP"
       default_action {
             type             = "forward"

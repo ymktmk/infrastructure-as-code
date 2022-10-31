@@ -1,0 +1,6 @@
+FROM azul/zulu-openjdk:8
+
+RUN apt-get update -qq && apt-get install -y curl telnet net-tools
+
+RUN curl -o /usr/local/bin/digdag --create-dirs -L 'https://dl.digdag.io/digdag-0.10.0' \
+      && chmod +x /usr/local/bin/digdag
