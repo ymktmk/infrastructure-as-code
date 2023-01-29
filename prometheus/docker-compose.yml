@@ -1,0 +1,25 @@
+version: '3'
+services:
+  # https://github.com/prometheus/node_exporter
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    ports:
+      - '9100:9100'
+    # volumes:
+    #   - ./proc:/host/proc
+    #   - ./sys:/host/sys
+    #   - ./rootfs:/rootfs
+
+  # container_exporter
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - '9090:9090'
+    # network_mode: 'host'
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    # network_mode: 'host'

@@ -4,6 +4,7 @@ global:
     monitor: 'codelab-monitor'
 scrape_configs:
   - job_name: 'node'
-    scrape_interval: 5s
+    # scrape_interval: 5s
     static_configs:
-      - targets: ['133.242.221.148:9100']
+      # コンテナ名を指定する
+      - targets: ['node_exporter:9100']

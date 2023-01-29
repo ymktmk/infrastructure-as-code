@@ -13,7 +13,7 @@ export const options = {
 }
 
 export default function () {
-  const url = __ENV.URL
+  const url = "http://localhost:3000"
   let response = http.get(url)
   check(response, { "status is 200": (r) => r.status === 200 })
 }
