@@ -1,6 +1,9 @@
 version: '3'
 services:
   # https://github.com/prometheus/node_exporter
+  # ホストシステムを監視するように設計されている.
+  # ホストシステムへのアクセスが必要なため, コンテナとしてデプロイする際は
+  # procファイルをマウントする必要がある. 
   node_exporter:
     image: quay.io/prometheus/node-exporter:latest
     ports:

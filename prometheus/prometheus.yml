@@ -8,3 +8,7 @@ scrape_configs:
     static_configs:
       # コンテナ名を指定する
       - targets: ['node_exporter:9100']
+  - job_name: 'ec2'
+    static_configs:
+      - targets:
+          - "18.181.227.236:9100"
