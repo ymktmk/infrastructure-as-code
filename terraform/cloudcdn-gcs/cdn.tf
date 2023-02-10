@@ -1,3 +1,6 @@
+# domainはTerraformで管理しないので
+# Aレコードの作成を行うこと
+
 # ロードバランサーのIP
 resource "google_compute_global_address" "cdn" {
   name = "cdn-ip"
