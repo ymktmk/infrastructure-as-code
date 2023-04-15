@@ -1,7 +1,7 @@
 # Webサイト
 resource "google_storage_bucket" "admin-web" {
-  name          = "kebjob-admin-web-${var.env}"
-  location      = "ASIA1"
+  name     = "kebjob-admin-web-${var.env}"
+  location = "ASIA1"
   # 後で消す
   force_destroy = true
   storage_class = "STANDARD"
@@ -9,7 +9,7 @@ resource "google_storage_bucket" "admin-web" {
   versioning {
     enabled = true
   }
-  
+
   website {
     main_page_suffix = "index.html"
     not_found_page   = "404.html"

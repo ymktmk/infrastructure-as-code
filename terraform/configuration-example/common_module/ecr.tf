@@ -8,7 +8,7 @@ resource "aws_ecr_repository" "ecr_repository" {
 }
 
 resource "aws_ecr_repository" "encer_server_fluentbit" {
-  name = "${var.encer_server}/${var.env_name}/fluentbit"
+  name                 = "${var.encer_server}/${var.env_name}/fluentbit"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {

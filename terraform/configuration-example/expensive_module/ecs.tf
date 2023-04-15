@@ -12,9 +12,9 @@ resource "aws_ecs_task_definition" "task_definition" {
   requires_compatibilities = ["EC2"]
   # ロールの違い https://dev.classmethod.jp/articles/ecs_fargate_iamrole/
   # https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task-iam-roles.html
-  task_role_arn            = aws_iam_role.ecs_task_exception_role.arn # Firehose, CloudWatch
+  task_role_arn = aws_iam_role.ecs_task_exception_role.arn # Firehose, CloudWatch
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
-  execution_role_arn       = aws_iam_role.ecs_task_exception_role.arn # ECR, SecretsManager etc
+  execution_role_arn = aws_iam_role.ecs_task_exception_role.arn # ECR, SecretsManager etc
   volume {
     host_path = "/var/www/.cache"
     name      = "cache"

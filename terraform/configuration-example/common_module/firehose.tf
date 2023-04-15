@@ -1,7 +1,7 @@
 resource "aws_kinesis_firehose_delivery_stream" "encer_server_firehose" {
   name        = "${var.encer_server}-${var.env_name}-firehose"
   destination = "s3"
-  
+
   s3_configuration {
     role_arn           = aws_iam_role.encer_server_firehose.arn
     bucket_arn         = aws_s3_bucket.encer_server_logs.arn
@@ -18,7 +18,7 @@ resource "aws_kinesis_firehose_delivery_stream" "encer_server_firehose" {
 }
 
 resource "aws_iam_role" "encer_server_firehose" {
-  name               = "${var.encer_server}-${var.env_name}-firehose-role"
+  name = "${var.encer_server}-${var.env_name}-firehose-role"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [

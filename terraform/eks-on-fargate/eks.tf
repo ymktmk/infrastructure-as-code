@@ -58,7 +58,7 @@ module "eks" {
         }
       ]
     }
-    
+
     nginx = {
       name = "nginx"
       selectors = [

@@ -1,3 +1,0 @@
-## aws-parts
-
-- Secrets Manager

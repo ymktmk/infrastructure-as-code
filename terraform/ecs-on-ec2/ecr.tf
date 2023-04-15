@@ -1,15 +1,15 @@
 resource "aws_ecr_repository" "ecr_repository" {
-      name                 = "ecr_repository"
-      image_tag_mutability = "MUTABLE"
-      image_scanning_configuration {
-            scan_on_push = true
-      }
+  name                 = "ecr_repository"
+  image_tag_mutability = "MUTABLE"
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
 
 resource "aws_ecr_lifecycle_policy" "ecr_lifecycle_policy" {
-      repository = aws_ecr_repository.ecr_repository.name
+  repository = aws_ecr_repository.ecr_repository.name
 
-      policy = <<EOF
+  policy = <<EOF
       {
       "rules": [
             {
