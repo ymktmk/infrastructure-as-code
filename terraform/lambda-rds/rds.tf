@@ -29,7 +29,6 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   }
 }
 
-
 # RDSのセキュリティーグループ
 resource "aws_security_group" "rds_security_group" {
   name   = "rds_security_group"
@@ -43,7 +42,7 @@ resource "aws_security_group" "rds_security_group" {
 resource "aws_security_group_rule" "accept3306" {
   security_group_id = aws_security_group.rds_security_group.id
   type              = "ingress"
-  cidr_blocks       = [aws_vpc.vpc.cidr_block]
+  source_security_group_id = aws_security_group.lambda_security_group.id # lambdaからのアクセスのみ
   from_port         = 3306
   to_port           = 3306
   protocol          = "tcp"

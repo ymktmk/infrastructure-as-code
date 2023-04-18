@@ -1,0 +1,43 @@
+service: python-rds
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: dev
+  region: ap-northeast-1
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - ec2:CreateNetworkInterface
+            - ec2:DescribeNetworkInterfaces
+            - ec2:DetachNetworkInterface
+            - ec2:DeleteNetworkInterface
+          Resource:
+            - "*"
+        - Effect: "Allow"
+          Action:
+            - rds-db:connect
+            - rds-db:query
+          Resource: arn:aws:rds:ap-northeast-1:009554248005:db:terraform-20230418141619130100000001
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+
+functions:
+  lambda_handler:
+    handler: handler.lambda_handler
+    vpc:
+      securityGroupIds:
+        - sg-xxxxxxxx
+      subnetIds:
+        - subnet-xxxxxxxx
+
