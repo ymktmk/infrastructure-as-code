@@ -1,0 +1,32 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+ name: gateway
+ namespace: istio-ingress
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      name: http
+      number: 80
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: nginx
+  namespace: istio-ingress
+spec:
+  gateways:
+  - gateway
+  hosts:
+    - "*"
+  http:
+  - route:
+    - destination:
+        host: nginx
+        port:
+          number: 80
