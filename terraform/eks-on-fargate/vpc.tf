@@ -11,4 +11,17 @@ module "vpc" {
 
   # privateサブネットの場合nat-gatewayが必要
   enable_nat_gateway = true
+
+  tags = {
+    # shared
+    "kubernetes.io/cluster/eks" = "shared"
+  }
+
+  public_subnet_tags = {
+    "kubernetes.io/role/elb" = 1
+  }
+
+  # private_subnet_tags = {
+  #   "kubernetes.io/role/internal-elb" = 1
+  # }
 }

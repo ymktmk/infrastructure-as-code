@@ -77,18 +77,31 @@ module "iam_policy_eks_load_balancer_controller" {
   path        = "/"
   description = "for load balancer controller"
 
+  # https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.0/docs/install/iam_policy.json
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
       {
+        "Effect": "Allow",
+        "Action": [
+            "iam:CreateServiceLinkedRole"
+        ],
+        "Resource": "*",
+        "Condition": {
+            "StringEquals": {
+                "iam:AWSServiceName": "elasticloadbalancing.amazonaws.com"
+            }
+        }
+      },
+      {
         "Effect" : "Allow",
         "Action" : [
-          "iam:CreateServiceLinkedRole",
           "ec2:DescribeAccountAttributes",
           "ec2:DescribeAddresses",
           "ec2:DescribeAvailabilityZones",
           "ec2:DescribeInternetGateways",
           "ec2:DescribeVpcs",
+          "ec2:DescribeVpcPeeringConnections",
           "ec2:DescribeSubnets",
           "ec2:DescribeSecurityGroups",
           "ec2:DescribeInstances",
