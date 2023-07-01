@@ -17,7 +17,7 @@ spec:
           value: ap-northeast-1
         # vpcId Terraformで作られるので記入
         - name: vpcId
-          value: vpc-02bcd6564839d141d 
+          value: vpc-03271fc5657ab3ef6
         - name: clusterName
           value: eks
       # oidc iam roleもTerraformで作られるので記入

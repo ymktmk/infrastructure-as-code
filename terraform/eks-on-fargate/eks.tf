@@ -10,7 +10,7 @@ module "eks" {
 
   vpc_id = module.vpc.vpc_id
   # public_subnets or private_subnets
-  subnet_ids  = module.vpc.private_subnets
+  subnet_ids  = module.vpc.public_subnets
   enable_irsa = true
 
   cluster_addons = {
@@ -43,43 +43,43 @@ module "eks" {
 
   # Fargate Profile(s) Private Subnetのみサポート
   # eks-fargate-podというPod実行Roleが作成される
-  fargate_profiles = {
-    go = {
-      name = "go"
-      selectors = [
-        {
-          namespace = "go"
-        }
-      ]
-    }
+  # fargate_profiles = {
+  #   go = {
+  #     name = "go"
+  #     selectors = [
+  #       {
+  #         namespace = "go"
+  #       }
+  #     ]
+  #   }
 
-    datadog = {
-      name = "datadog"
-      selectors = [
-        {
-          namespace = "datadog"
-        }
-      ]
-    }
+  #   datadog = {
+  #     name = "datadog"
+  #     selectors = [
+  #       {
+  #         namespace = "datadog"
+  #       }
+  #     ]
+  #   }
 
-    nginx = {
-      name = "nginx"
-      selectors = [
-        {
-          namespace = "nginx"
-        }
-      ]
-    }
+  #   nginx = {
+  #     name = "nginx"
+  #     selectors = [
+  #       {
+  #         namespace = "nginx"
+  #       }
+  #     ]
+  #   }
 
-    sidekiq = {
-      name = "sidekiq"
-      selectors = [
-        {
-          namespace = "sidekiq"
-        }
-      ]
-    }
-  }
+  #   sidekiq = {
+  #     name = "sidekiq"
+  #     selectors = [
+  #       {
+  #         namespace = "sidekiq"
+  #       }
+  #     ]
+  #   }
+  # }
 
   # kubectl get configmap/aws-auth -n kube-system -o yamlで確認
   manage_aws_auth_configmap = true
