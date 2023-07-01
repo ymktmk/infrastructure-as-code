@@ -92,6 +92,7 @@ spec:
   source:
     repoURL: https://istio-release.storage.googleapis.com/charts
     targetRevision: 1.18.0
+    # CLBを使用しない場合は、NodePortに変更する
     helm:
       values: |
         service:
