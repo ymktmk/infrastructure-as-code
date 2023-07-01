@@ -30,6 +30,7 @@ spec:
             eks.amazonaws.com/role-arn: arn:aws:iam::081151808619:role/eks-load-balancer-controller
   destination:
     server: 'https://kubernetes.default.svc'
+    # oidc_fully_qualified_subjectsで指定しているnamespace
     namespace: kube-system
   syncPolicy:
     automated:
