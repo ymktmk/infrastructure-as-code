@@ -15,17 +15,18 @@ spec:
       parameters:
         - name: region
           value: ap-northeast-1
-        # vpcId Terraformで作られるので後に記入
+        # vpcId Terraformで作られるので記入
         - name: vpcId
-          value: vpc-0c925464fba620372
+          value: vpc-02bcd6564839d141d 
         - name: clusterName
           value: eks
+      # oidc iam roleもTerraformで作られるので記入
       values: |
         serviceAccount:
           create: true
           name: aws-load-balancer-controller
           annotations:
-            eks.amazonaws.com/role-arn: arn:aws:iam::009554248005:role/eks-load-balancer-controller
+            eks.amazonaws.com/role-arn: arn:aws:iam::081151808619:role/eks-load-balancer-controller
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: default

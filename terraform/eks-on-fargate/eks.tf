@@ -5,7 +5,7 @@ module "eks" {
   version = "18.26.0"
 
   cluster_name                   = "eks"
-  cluster_version                = "1.21"
+  cluster_version                = "1.24"
   cluster_endpoint_public_access = true
 
   vpc_id = module.vpc.vpc_id
@@ -14,16 +14,19 @@ module "eks" {
   enable_irsa = true
 
   cluster_addons = {
+    # https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/managing-coredns.html
     coredns = {
-      addon_version     = "v1.8.4-eksbuild.2"
+      addon_version     = "v1.9.3-eksbuild.3"
       resolve_conflicts = "OVERWRITE"
     }
+    # https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/managing-kube-proxy.html
     kube-proxy = {
-      addon_version     = "v1.21.14-eksbuild.2"
+      addon_version     = "v1.24.10-eksbuild.2"
       resolve_conflicts = "OVERWRITE"
     }
+    # https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/managing-vpc-cni.html
     vpc-cni = {
-      addon_version     = "v1.11.4-eksbuild.1"
+      addon_version     = "v1.12.6-eksbuild.2"
       resolve_conflicts = "OVERWRITE"
     }
   }
