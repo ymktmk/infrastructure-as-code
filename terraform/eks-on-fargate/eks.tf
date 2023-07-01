@@ -86,7 +86,7 @@ module "eks" {
 
   aws_auth_roles = [
     {
-      rolearn  = "arn:aws:iam::009554248005:role/${aws_iam_role.github_actions_oidc.name}"
+      rolearn  = "arn:aws:iam::081151808619:role/${aws_iam_role.github_actions_oidc.name}"
       username = "github-actions-k8s-access"
       # groups   = ["job-exec-group"] <--- 作成したrole-group
       groups = ["system:masters"]

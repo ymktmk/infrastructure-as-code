@@ -38,11 +38,11 @@ module "iam_policy_external_secrets" {
           "secretsmanager:DescribeSecret"
         ],
         "Resource" : [
-          "arn:aws:secretsmanager:ap-northeast-1:009554248005:secret:datadog/*",
-          "arn:aws:secretsmanager:ap-northeast-1:009554248005:secret:aws/*",
-          "arn:aws:secretsmanager:ap-northeast-1:009554248005:secret:s3/*",
-          "arn:aws:secretsmanager:ap-northeast-1:009554248005:secret:ec2/*",
-          "arn:aws:secretsmanager:ap-northeast-1:009554248005:secret:lambda/*",
+          "arn:aws:secretsmanager:ap-northeast-1:081151808619:secret:datadog/*",
+          "arn:aws:secretsmanager:ap-northeast-1:081151808619:secret:aws/*",
+          "arn:aws:secretsmanager:ap-northeast-1:081151808619:secret:s3/*",
+          "arn:aws:secretsmanager:ap-northeast-1:081151808619:secret:ec2/*",
+          "arn:aws:secretsmanager:ap-northeast-1:081151808619:secret:lambda/*",
         ],
       }
     ]

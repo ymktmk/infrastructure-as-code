@@ -1,6 +1,9 @@
 ## EKS
 
-EKS Cluster on Public Subnet
+### Create EKS Cluster
+
+- クラスターのバージョンやアドオンのバージョンが正しいことを確認してください
+- Public SubnetかPrivate Subnetかを選択してください(FargateはPublic Subnetで動作しません)
 
 ### Setup ArgoCD
 

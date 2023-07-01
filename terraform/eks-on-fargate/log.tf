@@ -37,7 +37,7 @@
 #         "Effect" : "Allow",
 #         "Condition" : {
 #           "StringEquals" : {
-#             "sts:ExternalId" : "009554248005"
+#             "sts:ExternalId" : "081151808619"
 #           }
 #         }
 #       }
@@ -119,7 +119,7 @@
 #       }
 #       # FirehoseからS3へ転送する際にGlueにて変換する
 #       schema_configuration {
-#         catalog_id    = "009554248005"
+#         catalog_id    = "081151808619"
 #         database_name = aws_glue_catalog_table.nginx_nginx.database_name
 #         table_name    = aws_glue_catalog_table.nginx_nginx.name
 #         role_arn      = aws_iam_role.nginx_logs.arn
@@ -132,13 +132,13 @@
 
 # resource "aws_glue_catalog_database" "nginx" {
 #   name       = "nginx"
-#   catalog_id = "009554248005"
+#   catalog_id = "081151808619"
 # }
 
 # resource "aws_glue_catalog_table" "nginx_nginx" {
 #   name          = "nginx_nginx"
 #   database_name = "nginx"
-#   catalog_id    = "009554248005"
+#   catalog_id    = "081151808619"
 #   table_type    = "EXTERNAL_TABLE"
 #   parameters = {
 #     EXTERNAL                           = "TRUE"
