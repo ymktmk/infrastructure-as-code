@@ -1,10 +1,12 @@
-apiVersion: networking.istio.io/v1beta1
+# https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control
+apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
  name: gateway
  namespace: istio-ingress
 spec:
   selector:
+    # ingress-gatewayを選択
     istio: ingress
   servers:
   - port:
