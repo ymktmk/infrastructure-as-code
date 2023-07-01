@@ -27,8 +27,15 @@ spec:
   hosts:
     - "*"
   http:
-  - route:
+  - name: nginx
+    route:
     - destination:
         host: nginx
         port:
           number: 80
+  - name: hello
+    route:
+    - destination:
+        host: hello
+        port:
+          number: 8080
