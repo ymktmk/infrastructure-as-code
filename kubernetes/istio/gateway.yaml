@@ -27,17 +27,17 @@ spec:
   hosts:
     - "*"
   http:
-  # - name: nginx
-  #   route:
-  #   - destination:
-  #       host: nginx
-  #       port:
-  #         number: 80
-  #     weight: 10
+  - name: nginx
+    route:
+    - destination:
+        host: nginx
+        port:
+          number: 80
+      weight: 50
   - name: apache
     route:
     - destination:
         host: apache
         port:
           number: 80
-      # weight: 90
+      weight: 50
