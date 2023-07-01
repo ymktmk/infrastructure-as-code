@@ -50,6 +50,8 @@ module "iam_policy_external_secrets" {
 }
 
 # LoadBalancer
+# https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/deploy/installation/#iam-permissions
+# # https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.0/docs/install/iam_policy.json
 module "iam_assumable_role_with_oidc_eks_load_balancer_controller" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version = "~> 4"
@@ -77,7 +79,6 @@ module "iam_policy_eks_load_balancer_controller" {
   path        = "/"
   description = "for load balancer controller"
 
-  # https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.0/docs/install/iam_policy.json
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
