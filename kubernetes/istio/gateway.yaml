@@ -34,10 +34,10 @@ spec:
         port:
           number: 80
       weight: 10
-  - name: hello
+  - name: apache
     route:
     - destination:
-        host: hello
+        host: apache
         port:
-          number: 8080
+          number: 80
       weight: 90

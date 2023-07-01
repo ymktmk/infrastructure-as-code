@@ -38,10 +38,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello
+  name: apache
   namespace: istio-ingress
   labels:
-    app: hello
+    app: apache
 spec:
   type: NodePort
   ports:
@@ -49,25 +49,25 @@ spec:
     targetPort: 80
     protocol: TCP
   selector:
-    app: hello
+    app: apache
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello
+  name: apache
   namespace: istio-ingress
 spec:
   selector:
     matchLabels:
-      app: hello
+      app: apache
   replicas: 1
   template:
     metadata:
       labels:
-        app: hello
+        app: apache
     spec:
       containers:
-      - name: hello
-        image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:latest
+      - name: apache
+        image: httpd:latest
         ports:
         - containerPort: 8080
