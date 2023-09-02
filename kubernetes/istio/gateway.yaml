@@ -2,8 +2,8 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
- name: gateway
- namespace: istio-ingress
+  name: gateway
+  namespace: istio-ingress
 spec:
   selector:
     # ingress-gatewayを選択
@@ -23,6 +23,7 @@ metadata:
   namespace: istio-ingress
 spec:
   gateways:
+  # <gateway.name>.<gateway.namespace>
   - gateway
   hosts:
     - "*"
