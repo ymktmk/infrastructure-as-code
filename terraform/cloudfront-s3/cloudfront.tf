@@ -78,7 +78,7 @@ resource "aws_cloudfront_distribution" "web_app" {
   # ALB
   origin {
     domain_name = "ここにALBのDNS名を入れる"
-    origin_id   = "ALBOriginWear2WebPreview"
+    origin_id   = "ALBOriginWebApp"
 
     custom_origin_config {
       http_port              = 80

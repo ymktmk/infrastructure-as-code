@@ -40,12 +40,12 @@ resource "aws_security_group" "rds_security_group" {
 
 # 3306番ポート開放
 resource "aws_security_group_rule" "accept3306" {
-  security_group_id = aws_security_group.rds_security_group.id
-  type              = "ingress"
+  security_group_id        = aws_security_group.rds_security_group.id
+  type                     = "ingress"
   source_security_group_id = aws_security_group.lambda_security_group.id # lambdaからのアクセスのみ
-  from_port         = 3306
-  to_port           = 3306
-  protocol          = "tcp"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
 }
 
 resource "aws_security_group_rule" "rds_out_all" {
