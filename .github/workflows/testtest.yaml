@@ -1,0 +1,25 @@
+name: testtest
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write
+      pull-requests: write
+      contents: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure EKS
+      run: |
+        NUMBER=$(echo $GITHUB_REF | sed -e 's/[^0-9]//g')
+        echo https://github.com/ymktmk/infrastructure-as-code/pull/$NUMBER
