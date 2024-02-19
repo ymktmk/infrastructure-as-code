@@ -8,14 +8,14 @@ create_changeset=`aws cloudformation create-change-set \
                   --change-set-name $changeset_name \
                   --template-body file://$PWD/cloudformation/vpc.yaml`
 
-sleep 10
+sleep 15
 
 changeset_id=$(echo ${create_changeset} | jq -r .Id)
 changeset_json=$(aws cloudformation describe-change-set --change-set-name $changeset_id)
 changes=$(echo "$changeset_json" | jq -r .Changes)
 changes_length=$(echo "$changes" | jq length)
 
-echo "<details><summary><code>$stack_name ($changes_length changes)</code></summary>" # クリックで展開できるやつ
+echo "<code>$stack_name ($changes_length changes)</code>"
 echo
 if [ $changes_length -gt 0 ]; then
 echo '|Action|論理ID|物理ID|リソースタイプ|置換|' # 少しでも横幅を減らすためにActionだけ英語
@@ -30,9 +30,9 @@ for i in $( seq 0 $(($changes_length - 1)) ); do
   echo "|$col_1|$col_2|$col_3|$col_4|$col_5|"
 done
 fi
-echo '<ul><li><details><summary>view json</summary>' # インデントを付ける目的でリストにしている
+echo '<details>'
 echo
 echo '```json'
 echo "$changeset_json"
 echo '```'
-echo '</details></li></ul></details>'
+echo '</details>'
